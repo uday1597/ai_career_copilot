@@ -7,12 +7,14 @@ import app.models
 from app.api.v1.resume import router as resume_router
 from app.api.v1.job import router as job_router
 from app.api.v1.analysis import router as analysis_router
+from app.api.v1.job_discovery import router as job_discovery_router
 
 app = FastAPI(
     title="Career Copilot",
     version="0.1.0"
 )
 
+app.include_router(job_discovery_router)
 app.include_router(resume_router)
 app.include_router(job_router)
 app.include_router(analysis_router)
