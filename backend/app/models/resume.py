@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 from sqlalchemy import Text, JSON, DateTime
 from app.db.base import Base
-
+from pgvector.sqlalchemy import Vector
 
 class Resume(Base):
     __tablename__ = "resumes"
@@ -44,4 +44,8 @@ class Resume(Base):
         DateTime,
         default=datetime.utcnow,
         onupdate=datetime.utcnow
+    )
+    embedding: Mapped[list[float] | None] = mapped_column(
+        Vector(1536),
+        nullable=True
     )

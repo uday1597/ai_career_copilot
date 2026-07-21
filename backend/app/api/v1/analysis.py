@@ -8,7 +8,7 @@ from app.db.database import get_db
 from app.models.job import Job
 from app.models.resume import Resume
 from app.schemas.analysis import MatchRequest
-from app.services.match_service import calculate_match
+from app.services.ingestion.match_service import calculate_match
 
 router = APIRouter(
     prefix="/analysis",

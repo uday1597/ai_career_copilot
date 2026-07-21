@@ -51,26 +51,26 @@ class MicrosoftApiProvider:
 
             return jobs
 
-        async def get_job_details(
-            self,
-            position_id: str
-        ):
-            params = {
-                "position_id": position_id,
-                "domain": "microsoft.com",
-                "hl": "en",
-            }
+    async def get_job_details(
+        self,
+        position_id: str
+    ):
+        params = {
+            "position_id": position_id,
+            "domain": "microsoft.com",
+            "hl": "en",
+        }
 
-            async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient() as client:
 
-                response = await client.get(
-                    "https://apply.careers.microsoft.com/api/pcsx/position_details",
-                    params=params,
-                    headers={
-                        "Accept": "application/json"
-                    }
-                )
+            response = await client.get(
+                "https://apply.careers.microsoft.com/api/pcsx/position_details",
+                params=params,
+                headers={
+                    "Accept": "application/json"
+                }
+            )
 
-                response.raise_for_status()
+            response.raise_for_status()
 
-                return response.json()
+            return response.json()

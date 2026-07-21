@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.models.job import Job
 from app.schemas.job import JobCreate
-from app.services.job_analyzer import analyze_job
+from app.services.ai.job_analyzer import analyze_job
 
 router = APIRouter(prefix="/jobs", tags=["Jobs"])
 

@@ -1,7 +1,7 @@
 import json
 
-from app.services.openai_service import client
-
+from app.services.ingestion.openai_service import client
+from app.services.ai.embedding_service import EmbeddingService
 
 def analyze_resume(text: str) -> dict:
 
@@ -32,5 +32,7 @@ Resume:
     )
     print(response.output_text)
     result = response.output_text
-
-    return json.loads(result)
+    embedding_service = EmbeddingService()
+    embedding = embedding_service.create_embedding(result)
+    print(embedding)
+    return json.loads(result), embedding

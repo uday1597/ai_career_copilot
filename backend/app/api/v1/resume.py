@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.models.resume import Resume
 from app.schemas.resume import ResumeResponse
-from app.services.resume_analyzer import analyze_resume
-from app.services.extractors.extractor_service import extract_resume
+from app.services.ai.resume_analyzer import analyze_resume
+from app.extractors.extractor_service import extract_resume
 
 router = APIRouter(
     prefix="/resume",
@@ -38,7 +38,7 @@ async def upload_resume(
     print("=" * 100)
     print(extracted_text)
     print("=" * 100)
-    analysis = analyze_resume(
+    analysis,embedding = analyze_resume(
     extracted_text
     )
     print(type(analysis))
@@ -51,7 +51,8 @@ async def upload_resume(
             technologies=analysis["technologies"],
             summary=analysis["summary"],
             extraction_method=extracted_text["extraction_method"],
-            page_count=extracted_text["page_count"]
+            page_count=extracted_text["page_count"],
+            embedding=embedding
         )
 
         db.add(resume)

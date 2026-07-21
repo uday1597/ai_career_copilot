@@ -1,6 +1,6 @@
 import json
 
-from app.services.openai_service import client
+from app.services.ingestion.openai_service import client
 
 
 def analyze_job(description: str):

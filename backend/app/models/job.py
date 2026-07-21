@@ -1,10 +1,8 @@
 import uuid
-
 from sqlalchemy import Text, JSON
 from sqlalchemy.orm import Mapped, mapped_column
-
 from app.db.base import Base
-
+from pgvector.sqlalchemy import Vector
 
 class Job(Base):
     __tablename__ = "jobs"
@@ -22,5 +20,9 @@ class Job(Base):
 
     technologies: Mapped[list | None] = mapped_column(
         JSON,
+        nullable=True
+    )
+    embedding: Mapped[list[float] | None] = mapped_column(
+        Vector(1536),
         nullable=True
     )
