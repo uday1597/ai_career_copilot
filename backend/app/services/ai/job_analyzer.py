@@ -1,6 +1,7 @@
 import json
 
 from app.services.ingestion.openai_service import client
+from app.services.ai.embedding_service import EmbeddingService
 
 
 def analyze_job(description: str):
@@ -34,5 +35,9 @@ Job Description:
         .replace("```", "")
         .strip()
     )
+    embedding_service = EmbeddingService()
 
-    return json.loads(cleaned)
+    embedding = embedding_service.create_embedding(
+        cleaned
+    )
+    return json.loads(cleaned), embedding

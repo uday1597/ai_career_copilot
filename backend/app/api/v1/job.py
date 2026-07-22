@@ -19,14 +19,18 @@ def create_job(
     payload: JobCreate,
     db: Session = Depends(get_db)
 ):
-    analysis = analyze_job(
+    print("=" * 100)
+    print(payload.description)
+    print("=" * 100)
+    analysis,embedding = analyze_job(
         payload.description
     )
 
     job = Job(
         title=payload.title,
         description=payload.description,
-        technologies=analysis["technologies"]
+        technologies=analysis["technologies"],
+        embedding=embedding
     )
 
     db.add(job)

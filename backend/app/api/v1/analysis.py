@@ -9,42 +9,44 @@ from app.models.job import Job
 from app.models.resume import Resume
 from app.schemas.analysis import MatchRequest
 from app.services.ingestion.match_service import calculate_match
+from app.services.ai.matching import match_resume_to_jobs
+from app.services.ai.assessment_generator import generate_assessment
+from app.models.skill_assessment import SkillAssessment
+from app.schemas.assessment import AssessmentGenerateRequest
 
 router = APIRouter(
     prefix="/analysis",
     tags=["Analysis"]
 )
 
-
-@router.post("/match")
-def match_resume_to_job(
-    payload: MatchRequest,
+@router.get("/match/{resume_id}")
+def match_resume(
+    resume_id: str,
     db: Session = Depends(get_db)
 ):
-
-    resume = db.get(
-        Resume,
-        payload.resume_id
+    return match_resume_to_jobs(
+        db,
+        resume_id
+    )
+    
+@router.post("/generate")
+def generate_skill_assessment(
+    payload: AssessmentGenerateRequest,
+    db: Session = Depends(get_db)
+):
+    assessment = generate_assessment(
+        payload.skill
     )
 
-    if not resume:
-        raise HTTPException(
-            status_code=404,
-            detail="Resume not found"
-        )
-
-    job = db.get(
-        Job,
-        payload.job_id
+    record = SkillAssessment(
+        resume_id=payload.resume_id,
+        job_id=payload.job_id,
+        skill=payload.skill,
+        questions=assessment
     )
 
-    if not job:
-        raise HTTPException(
-            status_code=404,
-            detail="Job not found"
-        )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
 
-    return calculate_match(
-        resume.technologies or [],
-        job.technologies or []
-    )
+    return record

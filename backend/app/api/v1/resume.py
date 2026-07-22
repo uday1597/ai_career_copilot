@@ -20,8 +20,26 @@ router = APIRouter(
 def get_resumes(
     db: Session = Depends(get_db)
 ):
-    return db.query(Resume).all()
+    rows = db.query(
+    Resume.id,
+    Resume.filename,
+    Resume.technologies,
+    Resume.summary,
+    Resume.extraction_method,
+    Resume.page_count,
+    ).all()
 
+    return [
+        {
+            "id": row.id,
+            "filename": row.filename,
+            "technologies": row.technologies,
+            "summary": row.summary,
+            "extraction_method": row.extraction_method,
+            "page_count": row.page_count,
+        }
+        for row in rows
+    ]
 @router.post(
     "/upload",
     response_model=ResumeResponse
