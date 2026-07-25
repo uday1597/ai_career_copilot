@@ -1,16 +1,19 @@
-def calculate_match(
-    resume_technologies: list,
-    job_technologies: list
-):
+from app.models.resume import Resume
+from app.models.job import Job
 
+
+def calculate_match(
+    resume:Resume,
+    job:Job
+):
     resume_set = {
         tech.lower()
-        for tech in resume_technologies
+        for tech in resume.technologies
     }
 
     job_set = {
         tech.lower()
-        for tech in job_technologies
+        for tech in job.technologies
     }
 
     matching = sorted(

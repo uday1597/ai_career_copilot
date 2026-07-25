@@ -34,5 +34,10 @@ Resume:
     result = response.output_text
     embedding_service = EmbeddingService()
     embedding = embedding_service.create_embedding(result)
-    print(embedding)
+
+    print("=" * 100)
+    print("OPENAI RESULT:")
+    print(result)
+    print("=" * 100)
+
     return json.loads(result), embedding

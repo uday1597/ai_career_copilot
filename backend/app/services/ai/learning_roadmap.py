@@ -2,37 +2,46 @@ import json
 
 from app.services.ingestion.openai_service import client
 
+
 def generate_learning_roadmap(
-    resume_summary: str,
-    resume_technologies: list,
-    job_title: str,
-    job_description: str,
-    job_technologies: list,
+    match_score: int,
+    matching_technologies: list,
+    missing_technologies: list,
+    ai_explanation: dict,
 ):
     prompt = f"""
     You are an experienced AI career mentor.
 
-    Create a personalized learning roadmap.
+    A candidate has already been evaluated against a job.
 
-    Candidate Resume Summary:
-    {resume_summary}
+    Match Score:
+    {match_score}%
 
-    Candidate Technologies:
-    {", ".join(resume_technologies)}
+    Matching Technologies:
+    {", ".join(matching_technologies)}
 
-    Target Job:
-    {job_title}
+    Missing Technologies:
+    {", ".join(missing_technologies)}
 
-    Job Description:
-    {job_description}
+    AI Match Summary:
+    {ai_explanation.get("summary", "")}
 
-    Target Technologies:
-    {", ".join(job_technologies)}
+    Candidate Strengths:
+    {chr(10).join("- " + s for s in ai_explanation.get("strengths", []))}
+
+    Missing Skills:
+    {chr(10).join("- " + s for s in ai_explanation.get("missing_skills", []))}
+
+    Career Recommendations:
+    {chr(10).join("- " + r for r in ai_explanation.get("recommendations", []))}
+
+    Create a practical personalized roadmap.
 
     Return ONLY valid JSON.
 
     {{
         "estimated_completion": "",
+
         "weeks": [
             {{
                 "week": 1,
@@ -46,17 +55,20 @@ def generate_learning_roadmap(
 
     Rules:
     - Maximum 6 weeks.
-    - Focus only on missing skills.
+    - Focus ONLY on the missing skills.
+    - Do NOT include technologies the candidate already knows.
     - Order topics from beginner to advanced.
-    - Each week should include a practical mini project.
-    - Resources should be generic names (Microsoft Learn, LangChain Docs, OpenAI Docs, FastAPI Docs, etc.).
+    - Every week must contain a practical mini project.
+    - Resources should be high-quality free documentation such as Microsoft Learn, OpenAI Docs, LangChain Docs, FastAPI Docs, Azure Learn, Kubernetes Docs, etc.
+    - The roadmap should directly improve the candidate's match score.
     """
-    response = client.responses.create(
-    model="gpt-4.1-mini",
-    input=prompt,
-    )
-    content = response.output_text.strip()
 
+    response = client.responses.create(
+        model="gpt-4.1-mini",
+        input=prompt,
+    )
+
+    content = response.output_text.strip()
     content = content.replace("```json", "")
     content = content.replace("```", "")
 

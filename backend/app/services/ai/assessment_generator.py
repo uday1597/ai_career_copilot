@@ -2,69 +2,102 @@ import json
 
 from app.services.ingestion.openai_service import client
 
-def generate_assessment(
-    skill: str
-):
+
+def generate_assessment(week):
+
     prompt = f"""
-    You are a Senior AI Engineer.
+    You are a Senior Software Engineer and Technical Interviewer.
 
-    Create an assessment for:
+    Generate an assessment based on the learning roadmap below.
 
-    {skill}
+    Week:
+    {week["week"]}
 
-    Return ONLY JSON.
+    Focus:
+    {week["focus"]}
+
+    Topics:
+    {", ".join(week["topics"])}
+
+    Mini Project:
+    {week["mini_project"]}
+
+    Return ONLY valid JSON.
 
     {{
-        "mcqs":[
+        "title": "",
+        "estimated_duration": "",
+        "difficulty": "",
+
+        "mcqs": [
             {{
-                "question":"",
-                "options":[
+                "id": 1,
+                "question": "",
+                "options": [
                     "",
                     "",
                     "",
                     ""
                 ],
-                "answer":"",
-                "explanation":""
+                "answer": 0,
+                "explanation": ""
             }}
         ],
 
-        "coding":[
+        "coding": [
             {{
-                "question":"",
-                "difficulty":""
+                "id": 1,
+                "title": "",
+                "question": "",
+                "difficulty": "",
+                "expected_skills": [],
+                "hints": []
             }}
         ],
 
-        "scenario":[
+        "scenario": [
             {{
-                "question":"",
-                "expected_points":[]
+                "id": 1,
+                "question": "",
+                "expected_points": [],
+                "sample_answer": ""
             }}
         ]
     }}
 
     Rules
 
-    Generate
+    1. Generate exactly
 
-    5 MCQs
+    - 5 MCQs
+    - 2 Coding Questions
+    - 1 Scenario Question
 
-    2 Coding Questions
+    2. Questions must evaluate practical industry knowledge.
 
-    1 Scenario Question.
+    3. MCQs should include realistic distractors.
 
-    The questions should evaluate real-world industry knowledge.
+    4. Coding questions should resemble interview questions asked by Microsoft, Amazon, Google, Atlassian, Thoughtworks, etc.
+
+    5. Coding questions must not include complete solutions.
+
+    6. Scenario questions should assess architectural thinking and problem solving.
+
+    7. Explanations should be concise.
+
+    8. Output ONLY JSON.
     """
+
     response = client.responses.create(
-    model="gpt-4.1-mini",
-    input=prompt
+        model="gpt-4.1-mini",
+        input=prompt,
     )
 
     content = (
         response.output_text
         .replace("```json", "")
         .replace("```", "")
+        .strip()
     )
 
     return json.loads(content)

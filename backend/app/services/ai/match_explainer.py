@@ -13,6 +13,8 @@ def explain_match(
     job_description: str,
     job_technologies: list,
     match_score: int,
+    matching_technologies: list,
+    missing_technologies: list,
 ):
     prompt = f"""
     You are an experienced AI technical recruiter.
@@ -33,6 +35,12 @@ def explain_match(
 
     Job Technologies:
     {", ".join(job_technologies)}
+
+    Matching Technologies:
+    {", ".join(matching_technologies)}
+
+    Missing Technologies:
+    {", ".join(missing_technologies)}
 
     Semantic Match Score:
     {match_score}%

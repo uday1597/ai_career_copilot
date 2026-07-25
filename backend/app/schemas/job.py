@@ -9,6 +9,8 @@ class JobCreate(BaseModel):
 class JobResponse(BaseModel):
     id: str
     title: str
+    description: str
+    technologies: list[str]
 
     model_config = {
         "from_attributes": True

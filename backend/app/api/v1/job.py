@@ -3,16 +3,32 @@ from sqlalchemy.orm import Session
 
 from app.db.database import get_db
 from app.models.job import Job
-from app.schemas.job import JobCreate
+from app.schemas.job import JobCreate, JobResponse
 from app.services.ai.job_analyzer import analyze_job
 
 router = APIRouter(prefix="/jobs", tags=["Jobs"])
 
-@router.get("/")
+@router.get(
+    "/",
+    response_model=list[JobResponse]
+)
 def get_jobs(
     db: Session = Depends(get_db)
 ):
-    return db.query(Job).all()
+    jobs = (
+        db.query(Job)
+        .all()
+    )
+
+    return [
+        JobResponse(
+            id=str(job.id),
+            title=job.title,
+            description=job.description,
+            technologies=job.technologies,
+        )
+        for job in jobs
+    ]
     
 @router.post("/")
 def create_job(
