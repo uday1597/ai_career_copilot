@@ -1,17 +1,19 @@
 import uuid
 
-from sqlalchemy import Text
 from sqlalchemy import String
+from sqlalchemy import Text
 from sqlalchemy import Integer
 from sqlalchemy import DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.dialects.postgresql import UUID
+from datetime import datetime
 
 from pgvector.sqlalchemy import Vector
 
 from app.db.database import Base
+
 
 class KnowledgeDocument(Base):
 
@@ -35,7 +37,9 @@ class KnowledgeDocument(Base):
         String(100),
     )
 
-    chunk_index: Mapped[int]
+    chunk_index: Mapped[int] = mapped_column(
+        Integer,
+    )
 
     content: Mapped[str] = mapped_column(
         Text,
@@ -46,7 +50,7 @@ class KnowledgeDocument(Base):
         nullable=True,
     )
 
-    created_at: Mapped = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
     )
