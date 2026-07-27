@@ -95,7 +95,12 @@ export default function AssessmentPage() {
         setSubmitting(true);
     
         try {
-    
+            console.log({
+                assessment_id: assessment.id,
+                mcq_answers: mcqAnswers,
+                coding_answers: codingAnswers,
+                scenario_answer: scenarioAnswer,
+            });
             const result = await submitAssessment(
                 assessment.id,
                 mcqAnswers,

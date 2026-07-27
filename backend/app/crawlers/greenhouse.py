@@ -22,10 +22,6 @@ class GreenhouseCrawler(BaseCrawler):
                 "https://boards.greenhouse.io/openai"
             )
 
-            print(
-                await page.title()
-            )
-
             await browser.close()
 
         return []

@@ -42,7 +42,6 @@ class MicrosoftProvider(BaseProvider):
                 "networkidle"
             )
 
-            print(await page.title())
 
             await browser.close()
 

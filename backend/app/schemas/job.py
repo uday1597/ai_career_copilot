@@ -1,17 +1,32 @@
-from pydantic import BaseModel
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict
 
 
 class JobCreate(BaseModel):
-    title: str
-    description: str
 
+    title: str
+
+    company: str
+
+    location: str | None = None
+
+    description: str
 
 class JobResponse(BaseModel):
-    id: str
+
+    id: UUID
+
     title: str
+
+    company: str
+
+    location: str | None
+
     description: str
+
     technologies: list[str]
 
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = ConfigDict(
+        from_attributes=True
+    )

@@ -30,14 +30,8 @@ Resume:
         model="gpt-4.1-mini",
         input=prompt
     )
-    print(response.output_text)
     result = response.output_text
     embedding_service = EmbeddingService()
     embedding = embedding_service.create_embedding(result)
-
-    print("=" * 100)
-    print("OPENAI RESULT:")
-    print(result)
-    print("=" * 100)
 
     return json.loads(result), embedding

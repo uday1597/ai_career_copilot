@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 from uuid import UUID
 
@@ -80,3 +81,15 @@ class AssessmentResponse(BaseModel):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+class AssessmentStatusResponse(BaseModel):
+
+    exists: bool
+
+    assessment_id: UUID | None = None
+
+    status: str | None = None
+
+    overall_score: int | None = None
+
+    completed_at: datetime | None = None

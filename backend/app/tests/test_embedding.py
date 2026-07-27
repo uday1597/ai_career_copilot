@@ -5,6 +5,3 @@ service = EmbeddingService()
 vector = service.create_embedding(
     "Python FastAPI OpenAI LangGraph"
 )
-
-print(len(vector))
-print(vector[:5])

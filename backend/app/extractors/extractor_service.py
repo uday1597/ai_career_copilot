@@ -21,13 +21,10 @@ def extract_resume(file_bytes: bytes):
 
         if page_text:
 
-            print(f"Page {index+1}: PDF extraction")
 
             text += page_text + "\n"
 
         else:
-
-            print(f"Page {index+1}: OCR")
 
             page_text = ocr_extract(page)
 

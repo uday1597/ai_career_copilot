@@ -24,3 +24,21 @@ export async function matchCapabilities() {
     return response.data;
 
 }
+
+export async function createJob(
+    job: {
+        title: string;
+        company: string;
+        location: string;
+        description: string;
+    }
+) {
+
+    const response = await api.post(
+        "/jobs",
+        job
+    );
+
+    return response.data;
+
+}

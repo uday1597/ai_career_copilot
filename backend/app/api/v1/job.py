@@ -22,10 +22,12 @@ def get_jobs(
 
     return [
         JobResponse(
-            id=str(job.id),
+            id=job.id,
             title=job.title,
             description=job.description,
-            technologies=job.technologies,
+            company=job.company,
+            location=job.location,
+            technologies=job.technologies
         )
         for job in jobs
     ]
@@ -33,24 +35,44 @@ def get_jobs(
 @router.post("/")
 def create_job(
     payload: JobCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    print("=" * 100)
-    print(payload.description)
-    print("=" * 100)
-    analysis,embedding = analyze_job(
-        payload.description
+
+    job_text = f"""
+        Title: {payload.title}
+
+        Company: {payload.company}
+
+        Location: {payload.location or "Remote"}
+
+        Description:
+        {payload.description}
+        """
+
+    analysis, embedding = analyze_job(
+        job_text
     )
 
     job = Job(
+
         title=payload.title,
+
+        company=payload.company,
+
+        location=payload.location,
+
         description=payload.description,
+
         technologies=analysis["technologies"],
-        embedding=embedding
+
+        embedding=embedding,
+
     )
 
     db.add(job)
+
     db.commit()
+
     db.refresh(job)
 
     return job

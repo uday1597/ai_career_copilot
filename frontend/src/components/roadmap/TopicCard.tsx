@@ -3,26 +3,30 @@
 import { Week } from "../../types/roadMap";
 import MiniProjectCard from "./MiniProjectCard";
 import ResourceCard from "./ResourceCard";
-import Link from "next/link";
 import {
     AssessmentHistory,
 } from "@/src/types/assessmentHistory";
 
-interface Props{
+interface Props {
 
     week: Week;
 
-    matchId:string;
+    assessment?: AssessmentHistory;
 
-    assessment?:
-        AssessmentHistory;
+    onTakeAssessment: (
+        week: number
+    ) => void;
 
 }
 
 export default function TopicCard({
+
     week,
-    matchId,
+
     assessment,
+
+    onTakeAssessment,
+
 }: Props) {
 
     return (
@@ -86,9 +90,7 @@ export default function TopicCard({
 
                     {!assessment && (
 
-                        <span
-                            className="rounded-full bg-gray-100 px-4 py-2 text-sm"
-                        >
+                        <span className="rounded-full bg-gray-100 px-4 py-2 text-sm">
 
                             Not Started
 
@@ -96,11 +98,9 @@ export default function TopicCard({
 
                     )}
 
-                    {assessment?.status==="IN_PROGRESS" && (
+                    {assessment?.status === "IN_PROGRESS" && (
 
-                        <span
-                            className="rounded-full bg-yellow-100 px-4 py-2 text-sm text-yellow-700"
-                        >
+                        <span className="rounded-full bg-yellow-100 px-4 py-2 text-sm text-yellow-700">
 
                             In Progress
 
@@ -108,27 +108,19 @@ export default function TopicCard({
 
                     )}
 
-                    {assessment?.status==="COMPLETED" && (
+                    {assessment?.status === "COMPLETED" && (
 
                         <div>
 
-                            <span
-                                className="rounded-full bg-green-100 px-4 py-2 text-sm text-green-700"
-                            >
+                            <span className="rounded-full bg-green-100 px-4 py-2 text-sm text-green-700">
 
                                 Completed
 
                             </span>
 
-                            <p
-                                className="mt-3 text-sm font-semibold"
-                            >
+                            <p className="mt-3 text-sm font-semibold">
 
-                                Score
-
-                                {" "}
-
-                                {assessment.overall_score}%
+                                Score: {assessment.overall_score}%
 
                             </p>
 
@@ -138,37 +130,22 @@ export default function TopicCard({
 
                 </div>
 
-                <Link
-
-                    href={`/assessment?matchId=${matchId}&week=${week.week}`}
-
-                    className="rounded-lg bg-indigo-600 px-5 py-2 text-white"
-
+                <button
+                    onClick={() =>
+                        onTakeAssessment(week.week)
+                    }
+                    className="rounded-lg bg-indigo-600 px-5 py-2 text-white hover:bg-indigo-700"
                 >
 
                     {
-
-                        assessment?.status==="COMPLETED"
-
-                        ?
-
-                        "Review"
-
-                        :
-
-                        assessment?.status==="IN_PROGRESS"
-
-                        ?
-
-                        "Continue"
-
-                        :
-
-                        "Take Assessment"
-
+                        assessment?.status === "COMPLETED"
+                            ? "Review"
+                            : assessment?.status === "IN_PROGRESS"
+                            ? "Continue"
+                            : "Take Assessment"
                     }
 
-                </Link>
+                </button>
 
             </div>
 

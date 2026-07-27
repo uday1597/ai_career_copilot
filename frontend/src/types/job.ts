@@ -6,7 +6,9 @@ export interface Job {
 
     company: string;
 
-    location: string;
+    location: string | null;
+
+    description: string;
 
     technologies: string[];
 

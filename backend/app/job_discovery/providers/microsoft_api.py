@@ -29,9 +29,6 @@ class MicrosoftApiProvider:
                 headers=headers,
                 timeout=30,
             )
-
-            print(response.status_code)
-            print(response.text[:500])
             response_json = response.json()
 
             jobs = []

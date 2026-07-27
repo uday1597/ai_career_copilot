@@ -8,7 +8,6 @@ const menuItems = [
   { name: "Resume", href: "/resume" },
   { name: "Jobs", href: "/jobs" },
   { name: "Roadmap", href: "/roadmap" },
-  { name: "Assessment", href: "/assessment" },
   { name: "Settings", href: "/settings" },
 ];
 

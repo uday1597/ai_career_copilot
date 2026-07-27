@@ -11,13 +11,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-      <ThemeProvider>
-          <ResumeProvider>
-              <MatchProvider>
-                  {children}
-              </MatchProvider>
-          </ResumeProvider>
-      </ThemeProvider>
+        <ThemeProvider>
+            <ResumeProvider>
+                <MatchProvider>
+                    {children}
+                </MatchProvider>
+            </ResumeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

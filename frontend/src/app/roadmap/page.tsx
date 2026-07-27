@@ -23,17 +23,32 @@ import {
 import {
     AssessmentHistory,
 } from "@/src/types/assessmentHistory";
+import { useRouter } from "next/navigation";
+
+import {
+    getAssessmentStatus,
+    createNewAssessment,
+} from "@/src/services/assessment";
+
+import AssessmentChoiceDialog from "@/src/components/assessment/AssessmentChoiceDialog";
 
 export default function RoadmapPage() {
 
     const { matchResult } = useMatch();
-
+    const router = useRouter();
     const [roadmap, setRoadmap] =
         useState<LearningRoadmap | null>(null);
 
     const [loading, setLoading] =
         useState(false);
-
+    const [dialogOpen, setDialogOpen] =
+        useState(false);
+    
+    const [selectedWeek, setSelectedWeek] =
+        useState(0);
+    
+    const [assessmentStatus, setAssessmentStatus] =
+        useState<any>(null);
     const [
         history,
         setHistory,
@@ -62,6 +77,54 @@ export default function RoadmapPage() {
             );
     
         setHistory(result);
+    
+    }
+    async function handleTakeAssessment(
+        week: number
+    ) {
+    
+        if (!matchResult) return;
+    
+        const status =
+            await getAssessmentStatus(
+                matchResult.id,
+                week
+            );
+    
+        if (!status.exists) {
+    
+            router.push(
+                `/assessment?matchId=${matchResult.id}&week=${week}`
+            );
+    
+            return;
+    
+        }
+    
+        setSelectedWeek(week);
+    
+        setAssessmentStatus(status);
+    
+        setDialogOpen(true);
+    
+    }
+    function continueAssessment() {
+
+        router.push(
+            `/assessment?matchId=${matchResult!.id}&week=${selectedWeek}`
+        );
+    
+    }
+    async function newAttempt() {
+
+        await createNewAssessment(
+            matchResult!.id,
+            selectedWeek
+        );
+    
+        router.push(
+            `/assessment?matchId=${matchResult!.id}&week=${selectedWeek}`
+        );
     
     }
     useEffect(() => {
@@ -153,12 +216,23 @@ export default function RoadmapPage() {
 
                 {roadmap && matchResult && (
                     <LearningTimeline
-                    roadmap={roadmap}
-                    matchId={matchResult.id}
-                    history={history}
+                        roadmap={roadmap}
+                        history={history}
+                        onTakeAssessment={handleTakeAssessment}
                     />
                 )}
-
+                <AssessmentChoiceDialog
+                    open={dialogOpen}
+                    status={assessmentStatus?.status ?? ""}
+                    previousScore={
+                        assessmentStatus?.overall_score
+                    }
+                    onContinue={continueAssessment}
+                    onNew={newAttempt}
+                    onClose={() =>
+                        setDialogOpen(false)
+                    }
+                />
             </div>
 
         </AppLayout>

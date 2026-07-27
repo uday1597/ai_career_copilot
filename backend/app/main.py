@@ -11,6 +11,7 @@ from app.api.v1.analysis import router as analysis_router
 from app.api.v1.job_discovery import router as job_discovery_router
 from app.api.v1.roadmap import router as roadmap_router
 from app.api.v1.assessment import router as assessment_router
+from app.api.v1.dashboard import router as dashboard_router
 
 app = FastAPI(
     title="Career Copilot",
@@ -33,6 +34,8 @@ app.include_router(job_router)
 app.include_router(analysis_router)
 app.include_router(roadmap_router)
 app.include_router(assessment_router)
+app.include_router(dashboard_router)
+
 
 @app.on_event("startup")
 def startup():

@@ -16,6 +16,7 @@ from app.models.resume_match import ResumeMatch
 from app.schemas.assessment import (
     AssessmentGenerateRequest,
     AssessmentResponse,
+    AssessmentStatusResponse,
     AssessmentSubmitRequest,
 )
 
@@ -101,8 +102,6 @@ def generate(
         questions=questions,
         status="NOT_STARTED",
     )
-    print(type(record.questions))
-    print(record.questions)
 
     db.add(record)
 
@@ -261,3 +260,94 @@ def submit_assessment(
     db.refresh(assessment)
 
     return assessment
+
+@router.get(
+    "/status/{match_id}/{week}",
+    response_model=AssessmentStatusResponse,
+)
+def assessment_status(
+    match_id: UUID,
+    week: int,
+    db: Session = Depends(get_db),
+):
+
+    assessment = (
+        db.query(Assessment)
+        .filter(
+            Assessment.match_id == match_id,
+            Assessment.week == week,
+        )
+        .order_by(
+            Assessment.created_at.desc()
+        )
+        .first()
+    )
+
+    if not assessment:
+
+        return {
+            "exists": False
+        }
+
+    return {
+        "exists": True,
+        "assessment_id": str(assessment.id),
+        "status": assessment.status,
+        "overall_score": assessment.overall_score,
+        "completed_at": assessment.completed_at,
+    }
+
+@router.post(
+    "/new-attempt",
+    response_model=AssessmentResponse,
+)
+def new_attempt(
+    payload: AssessmentGenerateRequest,
+    db: Session = Depends(get_db),
+):
+    match = db.get(
+        ResumeMatch,
+        payload.match_id,
+    )
+
+    if not match:
+        raise HTTPException(
+            status_code=404,
+            detail="Match not found",
+        )
+    roadmap = (
+        db.query(LearningRoadmap)
+        .filter(
+            LearningRoadmap.match_id == payload.match_id
+        )
+        .first()
+    )
+    week = next(
+        (
+            w
+            for w in roadmap.roadmap["weeks"]
+            if w["week"] == payload.week
+        ),
+        None,
+    )
+    questions = generate_assessment(
+        week
+    )
+    record = Assessment(
+
+        match_id=payload.match_id,
+
+        week=payload.week,
+
+        questions=questions,
+
+        status="NOT_STARTED",
+
+    )
+    db.add(record)
+
+    db.commit()
+
+    db.refresh(record)
+
+    return record

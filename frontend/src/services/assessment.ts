@@ -76,3 +76,29 @@ export async function getAssessmentHistory(
     return response.data;
 
 }
+
+export async function getAssessmentStatus(
+    matchId: string,
+    week: number,
+) {
+    const response = await api.get(
+        `/assessment/status/${matchId}/${week}`
+    );
+
+    return response.data;
+}
+
+export async function createNewAssessment(
+    matchId: string,
+    week: number,
+) {
+    const response = await api.post(
+        "/assessment/new-attempt",
+        {
+            match_id: matchId,
+            week,
+        }
+    );
+
+    return response.data;
+}
