@@ -1,21 +1,21 @@
 import uuid
 
 from sqlalchemy import Text
-from sqlalchemy import JSON
 from sqlalchemy import String
-
+from sqlalchemy import Integer
+from sqlalchemy import DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-
 from sqlalchemy.dialects.postgresql import UUID
 
 from pgvector.sqlalchemy import Vector
 
 from app.db.database import Base
 
-class Job(Base):
+class KnowledgeDocument(Base):
 
-    __tablename__ = "jobs"
+    __tablename__ = "knowledge_documents"
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -23,27 +23,30 @@ class Job(Base):
         default=uuid.uuid4,
     )
 
-    title: Mapped[str]
-
-    company: Mapped[str] = mapped_column(
-        String(255)
-    )
-
-    location: Mapped[str | None] = mapped_column(
+    title: Mapped[str] = mapped_column(
         String(255),
-        nullable=True,
     )
 
-    description: Mapped[str] = mapped_column(
-        Text
+    source: Mapped[str] = mapped_column(
+        String(255),
     )
 
-    technologies: Mapped[list | None] = mapped_column(
-        JSON,
-        nullable=True,
+    document_type: Mapped[str] = mapped_column(
+        String(100),
+    )
+
+    chunk_index: Mapped[int]
+
+    content: Mapped[str] = mapped_column(
+        Text,
     )
 
     embedding: Mapped[list[float] | None] = mapped_column(
         Vector(1536),
         nullable=True,
+    )
+
+    created_at: Mapped = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
     )

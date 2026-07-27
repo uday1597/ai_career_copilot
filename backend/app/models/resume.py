@@ -8,8 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from pgvector.sqlalchemy import Vector
 
-from app.db.base import Base
-
+from app.db.database import Base
 
 class Resume(Base):
     __tablename__ = "resumes"
