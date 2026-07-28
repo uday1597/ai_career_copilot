@@ -14,17 +14,25 @@ from app.api.v1.assessment import router as assessment_router
 from app.api.v1.dashboard import router as dashboard_router
 from app.api.routes.assistant import router as assistant_router
 from app.api.rag import router as rag_router
+import os
+
 
 app = FastAPI(
     title="Career Copilot",
     version="0.1.0"
 )
 
+origins = [
+    "http://localhost:3000",
+]
+
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -48,3 +56,11 @@ def startup():
 @app.get("/health")
 def health():
     return {"status": "healthy"}
+
+@app.get("/")
+def root():
+    return {
+        "app": "Career Copilot API",
+        "status": "running",
+        "version": "1.0.0"
+    }
