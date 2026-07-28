@@ -21,28 +21,31 @@ export default function AssessmentSummaryCard({
                 Assessment Summary
 
             </h2>
+            {assessment?(
+            <>
+                <div className="mt-6 space-y-3">
 
-            <div className="mt-6 space-y-3">
+                    <p>
 
-                <p>
+                        Attempted: {assessment.attempted}
 
-                    Attempted: {assessment.attempted}
+                    </p>
 
-                </p>
+                    <p>
 
-                <p>
+                        Average Score: {assessment.average_score}%
 
-                    Average Score: {assessment.average_score}%
+                    </p>
 
-                </p>
+                    <p>
 
-                <p>
+                        Best Score: {assessment.best_score}%
 
-                    Best Score: {assessment.best_score}%
+                    </p>
 
-                </p>
-
-            </div>
+                </div>
+            </>
+            ):(<div>No assessment available yet.</div>)}
 
         </div>
 
