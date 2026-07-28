@@ -21,25 +21,29 @@ export default function MatchCard({
                 Latest Match
 
             </h2>
+            {match ? (
+                <>
+                    <p className="mt-4">
 
-            <p className="mt-4">
+                        {match.job_title}
 
-                {match.job_title}
+                    </p>
 
-            </p>
+                    <p className="text-slate-500">
 
-            <p className="text-slate-500">
+                        {match.company}
 
-                {match.company}
+                    </p>
 
-            </p>
+                    <div className="mt-6 text-4xl font-bold text-indigo-600">
 
-            <div className="mt-6 text-4xl font-bold text-indigo-600">
+                        {match.match_score}%
 
-                {match.match_score}%
-
-            </div>
-
+                    </div>
+                </>
+            ): (
+                <div>No resume analysis available yet.</div>
+              )}
         </div>
 
     );
