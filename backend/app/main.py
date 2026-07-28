@@ -27,6 +27,7 @@ origins = [
 ]
 
 frontend_url = os.getenv("FRONTEND_URL")
+
 if frontend_url:
     origins.append(frontend_url)
 
@@ -37,7 +38,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 app.include_router(job_discovery_router)
 app.include_router(resume_router)
 app.include_router(job_router)
