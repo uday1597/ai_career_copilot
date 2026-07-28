@@ -22,59 +22,62 @@ export default function SkillsCard({
 
             </h2>
 
-            <div className="mt-6">
+            {skills?(
+            <>
+                <div className="mt-6">
 
-                <h3 className="font-semibold">
+                    <h3 className="font-semibold">
 
-                    Strongest Skills
+                        Strongest Skills
 
-                </h3>
+                    </h3>
+                    <div className="mt-2 flex flex-wrap gap-2">
 
-                <div className="mt-2 flex flex-wrap gap-2">
+                        {skills.strongest.map(skill => (
 
-                    {skills.strongest.map(skill => (
+                            <span
+                                key={skill}
+                                className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700"
+                            >
 
-                        <span
-                            key={skill}
-                            className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-700"
-                        >
+                                {skill}
 
-                            {skill}
+                            </span>
 
-                        </span>
+                        ))}
 
-                    ))}
-
-                </div>
-
-            </div>
-
-            <div className="mt-6">
-
-                <h3 className="font-semibold">
-
-                    Skills to Improve
-
-                </h3>
-
-                <div className="mt-2 flex flex-wrap gap-2">
-
-                    {skills.weakest.map(skill => (
-
-                        <span
-                            key={skill}
-                            className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700"
-                        >
-
-                            {skill}
-
-                        </span>
-
-                    ))}
+                    </div>
 
                 </div>
 
-            </div>
+                <div className="mt-6">
+
+                    <h3 className="font-semibold">
+
+                        Skills to Improve
+
+                    </h3>
+
+                    <div className="mt-2 flex flex-wrap gap-2">
+
+                        {skills.weakest.map(skill => (
+
+                            <span
+                                key={skill}
+                                className="rounded-full bg-red-100 px-3 py-1 text-sm text-red-700"
+                            >
+
+                                {skill}
+
+                            </span>
+
+                        ))}
+
+                    </div>
+
+                </div>
+            </>
+            ):(<div>No skills available yet.</div>)}
 
         </div>
 
