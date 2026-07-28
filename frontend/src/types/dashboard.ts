@@ -1,12 +1,8 @@
 export interface LatestMatch {
-
-    job_title: string;
-
-    company: string;
-
-    match_score: number;
-
-}
+    job_title: string | null;
+    company: string | null;
+    match_score: number | null;
+  }
 
 export interface RoadmapSummary {
 
