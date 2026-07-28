@@ -21,44 +21,47 @@ export default function RoadmapProgressCard({
                 Roadmap Progress
 
             </h2>
+            {roadmap?(
+            <>
+                <div className="mt-6">
 
-            <div className="mt-6">
+                    <div className="h-4 rounded-full bg-slate-200">
 
-                <div className="h-4 rounded-full bg-slate-200">
+                        <div
+                            className="h-4 rounded-full bg-green-600"
+                            style={{
+                                width:
+                                    `${roadmap.completion_percentage}%`,
+                            }}
+                        />
 
-                    <div
-                        className="h-4 rounded-full bg-green-600"
-                        style={{
-                            width:
-                                `${roadmap.completion_percentage}%`,
-                        }}
-                    />
+                    </div>
 
                 </div>
 
-            </div>
+                <div className="mt-6 space-y-2">
 
-            <div className="mt-6 space-y-2">
+                    <p>
 
-                <p>
+                        Completed: {roadmap.completed_weeks}
 
-                    Completed: {roadmap.completed_weeks}
+                    </p>
 
-                </p>
+                    <p>
 
-                <p>
+                        In Progress: {roadmap.in_progress_weeks}
 
-                    In Progress: {roadmap.in_progress_weeks}
+                    </p>
 
-                </p>
+                    <p>
 
-                <p>
+                        Remaining: {roadmap.not_started_weeks}
 
-                    Remaining: {roadmap.not_started_weeks}
+                    </p>
 
-                </p>
-
-            </div>
+                </div>
+            </>
+            ):(<div>No roadmap available yet.</div>)}
 
         </div>
 
