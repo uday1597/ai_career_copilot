@@ -6,7 +6,7 @@ from app.models.resume_match import ResumeMatch
 from app.models.learning_roadmap import LearningRoadmap
 from app.models.assessment import Assessment
 
-def get_dashboard_tool(db,):
+def get_dashboard_tool(db,context,previous_results,):
 
     dashboard = build_dashboard(db)
 
@@ -15,7 +15,7 @@ def get_dashboard_tool(db,):
         default=str,
     )
 
-def search_jobs_tool(db, keyword: str | None = None,):
+def search_jobs_tool(db,context,previous_results,keyword: str | None = None,):
 
     jobs = (
         db.query(Job)
@@ -39,7 +39,8 @@ def search_jobs_tool(db, keyword: str | None = None,):
 
     return json.dumps(results, default=str)
 
-def get_resume_match_tool(db,):
+def get_resume_match_tool(db,context,
+    previous_results,):
 
     match = (
         db.query(ResumeMatch)
@@ -66,7 +67,8 @@ def get_resume_match_tool(db,):
         default=str,
     )
 
-def get_learning_roadmap_tool(db,):
+def get_learning_roadmap_tool(db,context,
+    previous_results,):
 
     roadmap = (
         db.query(LearningRoadmap)
@@ -89,7 +91,8 @@ def get_learning_roadmap_tool(db,):
         default=str,
     )
     
-def get_assessment_tool(db,week: int,):
+def get_assessment_tool(db,context,
+    previous_results,week: int,):
     
     assessment = (
         db.query(Assessment)

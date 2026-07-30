@@ -1,4 +1,6 @@
 import api from "./api";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+const API = process.env.NEXT_PUBLIC_API_URL!;
 
 export async function generateRoadmap(
     matchId: string
@@ -21,4 +23,27 @@ export async function getRoadmap(
     );
 
     return response.data;
+}
+
+
+
+export async function generateRoadmapStream(
+  matchId: string,
+  onEvent: (event: any) => void
+) {
+  await fetchEventSource(`${API}/roadmap/generate-stream`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      match_id: matchId,
+    }),
+
+    async onmessage(msg) {
+      if (!msg.data) return;
+
+      onEvent(JSON.parse(msg.data));
+    },
+  });
 }

@@ -92,13 +92,14 @@ async def upload_resume(
 
     # Read for processing
     file_bytes = file_path.read_bytes()
-
+    
     extracted_text = extract_resume(file_bytes)
 
     analysis, embedding = analyze_resume(
         extracted_text
     )
-
+    print("LLM Result:")
+    print(repr(analysis))
     resume = Resume(
         filename=file.filename,
         file_path=str(file_path),

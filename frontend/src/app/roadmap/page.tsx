@@ -11,6 +11,7 @@ import { LearningRoadmap } from "@/src/types/roadMap";
 import {
     getRoadmap,
     generateRoadmap,
+    generateRoadmapStream,
 } from "@/src/services/roadmap";
 
 import RoadmapHeader from "@/src/components/roadmap/RoadmapHeader";
@@ -38,7 +39,7 @@ export default function RoadmapPage() {
     const router = useRouter();
     const [roadmap, setRoadmap] =
         useState<LearningRoadmap | null>(null);
-
+    const [streamText, setStreamText] = useState("");
     const [loading, setLoading] =
         useState(false);
     const [dialogOpen, setDialogOpen] =
@@ -46,7 +47,7 @@ export default function RoadmapPage() {
     
     const [selectedWeek, setSelectedWeek] =
         useState(0);
-    
+    const [status, setStatus] = useState("");
     const [assessmentStatus, setAssessmentStatus] =
         useState<any>(null);
     const [
@@ -158,18 +159,68 @@ export default function RoadmapPage() {
 
     }
 
+    // async function handleGenerateRoadmap() {
+
+    //     if (!matchResult) return;
+
+    //     setLoading(true);
+    //     try {
+
+    //         const result = await generateRoadmap(
+    //             matchResult.id
+    //         );
+
+    //         setRoadmap(result.roadmap);
+
+    //     } finally {
+
+    //         setLoading(false);
+
+    //     }
+
+    // }
+
     async function handleGenerateRoadmap() {
 
         if (!matchResult) return;
 
         setLoading(true);
+        setStreamText("");
+
         try {
 
-            const result = await generateRoadmap(
-                matchResult.id
-            );
+            await generateRoadmapStream(
+                matchResult.id,
+                (event) => {
 
-            setRoadmap(result.roadmap);
+                    switch (event.type) {
+                        case "status":
+                            setStatus(event.message);
+                            break;
+
+                        case "progress":
+                            console.log(event.value);
+                            break;
+
+                        case "token":
+                            setStreamText(prev => prev + event.content);
+                            break;
+
+                        case "complete":
+
+                            setRoadmap(event.data.roadmap);
+                        
+                            break;
+
+                        case "error":
+
+                            console.error(event.message);
+
+                            break;
+                    }
+
+                }
+            );
 
         } finally {
 
@@ -178,7 +229,6 @@ export default function RoadmapPage() {
         }
 
     }
-
     return (
 
         <AppLayout>
@@ -213,7 +263,9 @@ export default function RoadmapPage() {
                     />
 
                 )}
-
+                {!roadmap && !matchResult && (<div className="rounded-xl bg-slate-900 p-6 text-white">
+                    {status}
+                </div>)}
                 {roadmap && matchResult && (
                     <LearningTimeline
                         roadmap={roadmap}
