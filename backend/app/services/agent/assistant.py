@@ -3,8 +3,8 @@ import json
 from app.services.ingestion.openai_service import client
 
 from app.services.agent.prompts import SYSTEM_PROMPT
-from app.services.agent.tools import TOOLS
-from app.services.agent.tool_registry import TOOL_REGISTRY
+from app.services.agent.tool_metadata import TOOLS
+from app.services.agent.tools.registery import TOOL_REGISTRY
 
 
 def chat(

@@ -1,32 +1,33 @@
 import json
 
-from app.services.agent.planner_models import ExecutionPlan
+from app.services.agent.models.planner import ExecutionPlan
 from app.services.ingestion.openai_service import client
+from app.services.agent.tool_metadata import TOOLS
 
+tool_text = "\n".join(
+    f"- {tool['name']}: {tool['description']}"
+    for tool in TOOLS
+)
 
-SYSTEM_PROMPT = """
+SYSTEM_PROMPT = f"""
 You are an AI planner.
 
-Your only job is to decide which tools should be executed.
+Your job is to decide which tools should be executed.
 
 Available tools:
 
-get_dashboard
-search_jobs
-get_resume_match
-get_learning_roadmap
-get_assessment
+{tool_text}
 
 Return ONLY JSON.
 
-{
-  "steps":[
-    {
-      "tool":"",
-      "reason":""
-    }
-  ]
-}
+{{
+    "steps":[
+        {{
+            "tool":"",
+            "reason":""
+        }}
+    ]
+}}
 """
 
 

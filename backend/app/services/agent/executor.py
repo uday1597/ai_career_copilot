@@ -1,4 +1,4 @@
-from app.services.agent.tool_registry import TOOL_REGISTRY
+from app.services.agent.tools.registery import TOOL_REGISTRY
 
 
 class AgentExecutor:
