@@ -1,6 +1,11 @@
 import api from "./api";
 
 export async function getJobs() {
+
+    console.log("Base URL:", api.defaults.baseURL);
+    console.log("Endpoint:", "/jobs");
+    console.log("Final URL:", `${api.defaults.baseURL}/jobs`);
+    
     const response = await api.get("/jobs");
     return response.data;
 }

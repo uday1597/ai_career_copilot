@@ -1,6 +1,10 @@
 import api from "./api";
 
 export async function getResumes() {
+    console.log("===== getResumes =====");
+    console.log("Base URL:", api.defaults.baseURL);
+    console.log("Endpoint:", "/resume");
+    console.log("Final URL:", `${api.defaults.baseURL}/resume`);
     const response = await api.get("/resume");
     return response.data;
 }
