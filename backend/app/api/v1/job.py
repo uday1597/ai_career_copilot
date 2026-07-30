@@ -9,7 +9,7 @@ from app.services.ai.job_analyzer import analyze_job
 router = APIRouter(prefix="/jobs", tags=["Jobs"])
 
 @router.get(
-    "/",
+    "",
     response_model=list[JobResponse]
 )
 def get_jobs(
@@ -32,7 +32,7 @@ def get_jobs(
         for job in jobs
     ]
     
-@router.post("/")
+@router.post("")
 def create_job(
     payload: JobCreate,
     db: Session = Depends(get_db),

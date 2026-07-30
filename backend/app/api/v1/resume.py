@@ -21,7 +21,7 @@ router = APIRouter(
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
-@router.get("/")
+@router.get("")
 def get_resumes(
     db: Session = Depends(get_db)
 ):
