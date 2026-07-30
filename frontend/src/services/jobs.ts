@@ -1,3 +1,4 @@
+import { CrawledJob } from "../types/job";
 import api from "./api";
 
 export async function getJobs() {
@@ -10,14 +11,13 @@ export async function getJobs() {
     return response.data;
 }
 
-export async function discoverJobs() {
 
-    const response = await api.get(
+export async function discoverJobs(): Promise<CrawledJob[]> {
+    const response = await api.get<CrawledJob[]>(
         "/job-discovery/search"
     );
 
     return response.data;
-
 }
 
 export async function matchCapabilities() {

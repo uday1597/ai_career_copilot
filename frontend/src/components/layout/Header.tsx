@@ -5,9 +5,6 @@ export default function Header() {
           Dashboard
         </h2>
   
-        <div>
-          👤 Uday
-        </div>
       </header>
     );
   }
