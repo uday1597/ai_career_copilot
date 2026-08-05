@@ -29,9 +29,6 @@ export default function JobsPage() {
             setError("");
 
             const result = await discoverJobs();
-
-            console.log("Discovered Jobs:", result);
-
             setJobs(result);
         } catch (err) {
             console.error(err);

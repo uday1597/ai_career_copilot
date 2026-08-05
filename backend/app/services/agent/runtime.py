@@ -1,7 +1,6 @@
-from app.services.agent.planner import create_plan
-from app.services.agent.executor import AgentExecutor
-from app.services.agent.context import AgentContext
-from app.services.agent.responder import stream_response
+from app.services.agent.graph.graph import graph
+from app.services.agent.graph.config import get_graph_config
+from app.services.agent.graph.event_mapper import map_graph_event
 
 
 class AgentRuntime:
@@ -11,60 +10,16 @@ class AgentRuntime:
 
     def run(self, prompt: str):
 
-        yield {
-            "type": "status",
-            "message": "Planning...",
+        state = {
+            "prompt": prompt,
+            "db": self.db,
         }
 
-        context = AgentContext()
-
-        plan = create_plan(prompt)
-
-        yield {
-            "type": "plan",
-            "steps": [
-                {
-                    "tool": step.tool.value,
-                    "reason": step.reason,
-                }
-                for step in plan.steps
-            ],
-        }
-
-        executor = AgentExecutor(self.db)
-
-        results = {}
-
-        for event in executor.execute(
-            plan,
-            context,
+        for event in graph.stream(
+            state,
+            config={**get_graph_config("career-copilot"),"recursion_limit": 20,}
         ):
+            event = map_graph_event(event)
 
-            yield event
-
-            if event["type"] == "tool_end":
-                results[event["tool"]] = event["result"]
-
-        yield {
-            "type": "status",
-            "message": "Generating response...",
-        }
-
-        answer = ""
-
-        for token in stream_response(
-            prompt,
-            results,
-        ):
-
-            answer += token
-
-            yield {
-                "type": "token",
-                "content": token,
-            }
-
-        yield {
-            "type": "complete",
-            "answer": answer,
-        }
+            if event:
+                yield event

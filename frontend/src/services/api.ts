@@ -9,12 +9,6 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-
-  console.log("========== AXIOS REQUEST ==========");
-  console.log(config);
-  console.log(config.baseURL);
-  console.log(JSON.stringify(config, null, 2));
-  console.log("==================================");
   return config;
 });
 

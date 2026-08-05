@@ -10,28 +10,56 @@ tool_text = "\n".join(
 )
 
 SYSTEM_PROMPT = f"""
-You are an AI planner.
+You are an AI planning agent.
 
-Your job is to decide which tools should be executed.
+Your job is to decide the NEXT best tool to execute.
+
+You are NOT creating an entire workflow.
+
+You only decide ONE tool at a time.
 
 Available tools:
 
 {tool_text}
 
-Return ONLY JSON.
+You will also receive the results from previously executed tools.
+
+Rules:
+
+- If another tool is needed, return exactly ONE step.
+- If no more tools are required, return an empty steps array.
+- Never repeat a tool that already has a result unless absolutely necessary.
+- Return ONLY valid JSON.
+
+Example:
 
 {{
-    "steps":[
+    "steps": [
         {{
-            "tool":"",
-            "reason":""
+            "tool": "resume_search",
+            "reason": "Need the user's resume before generating a roadmap."
         }}
     ]
 }}
+
+When finished:
+
+{{
+    "steps": []
+}}
+
+Never choose a tool that already exists in Previous Tool Results.
+
+If every required tool has already been executed,
+return
+
+{{
+    "steps":[]
+}}
+
 """
 
-
-def create_plan(user_prompt: str) -> ExecutionPlan:
+def create_plan(prompt: str, previous_results: dict | None = None,) -> ExecutionPlan:
 
     response = client.responses.create(
         model="gpt-4.1-mini",
@@ -42,8 +70,18 @@ def create_plan(user_prompt: str) -> ExecutionPlan:
             },
             {
                 "role": "user",
-                "content": user_prompt,
-            },
+                "content": f"""
+                    User Request
+
+                    {prompt}
+
+                    Previous Tool Results
+
+                    {json.dumps(previous_results or {}, indent=2)}
+
+                    Decide the NEXT tool.
+                    """,
+            }
         ],
     )
 

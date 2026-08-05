@@ -98,8 +98,6 @@ async def upload_resume(
     analysis, embedding = analyze_resume(
         extracted_text
     )
-    print("LLM Result:")
-    print(repr(analysis))
     resume = Resume(
         filename=file.filename,
         file_path=str(file_path),

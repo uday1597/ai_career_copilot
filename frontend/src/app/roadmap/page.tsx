@@ -199,7 +199,7 @@ export default function RoadmapPage() {
                             break;
 
                         case "progress":
-                            console.log(event.value);
+                            console.log("roadmap progress:", event.value);
                             break;
 
                         case "token":
