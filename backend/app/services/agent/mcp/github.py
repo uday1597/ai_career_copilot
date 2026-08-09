@@ -24,7 +24,11 @@ class GitHubMCPClient:
     tool_name: str,
     arguments: dict,
     ):
-
+        print("\n🔥 MCP TOOL CALLED")
+        print("Server: GitHub MCP")
+        print("Tool:", tool_name)
+        print("Arguments:", arguments)
+        print("🔥 END MCP CALL\n")
         headers = {
             "Authorization": f"Bearer {self.token}",
         }
@@ -54,9 +58,10 @@ class GitHubMCPClient:
                         arguments,
                     )
 
-                    return result
+                    return result.model_dump()
 
     async def list_tools(self):
+        print("🔥 MCP TOOLS DISCOVERED:")
 
         headers = {
             "Authorization": f"Bearer {self.token}",

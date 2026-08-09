@@ -11,16 +11,11 @@ from .nodes import (
 
 from .router import (
     route_after_intent,
+    route_after_planner,
 )
 
 
-# ============================================================
-# GRAPH BUILDER
-# ============================================================
-
-builder = StateGraph(
-    AgentState
-)
+builder = StateGraph(AgentState)
 
 
 # ============================================================
@@ -59,15 +54,7 @@ builder.add_edge(
 
 
 # ============================================================
-# INTENT ROUTING
-#
-# CASUAL / GENERAL
-#       ↓
-#   responder
-#
-# TOOL
-#       ↓
-#   planner
+# INTENT
 # ============================================================
 
 builder.add_conditional_edges(
@@ -77,35 +64,54 @@ builder.add_conditional_edges(
 
     {
         "planner": "planner",
-
         "responder": "responder",
     },
 )
 
 
 # ============================================================
-# TOOL PIPELINE
+# PLANNER
 #
-# planner
-#    ↓
-# executor
-#    ↓
-# responder
+# If plan has steps:
+#
+#     planner → executor
+#
+# If plan is empty:
+#
+#     planner → responder
 # ============================================================
 
-builder.add_edge(
+builder.add_conditional_edges(
     "planner",
-    "executor",
-)
 
-builder.add_edge(
-    "executor",
-    "responder",
+    route_after_planner,
+
+    {
+        "executor": "executor",
+        "responder": "responder",
+    },
 )
 
 
 # ============================================================
-# END
+# EXECUTOR
+#
+# After executing a tool:
+#
+#     executor → planner
+#
+# Planner sees previous tool results and decides
+# whether another tool is required.
+# ============================================================
+
+builder.add_edge(
+    "executor",
+    "planner",
+)
+
+
+# ============================================================
+# RESPONDER
 # ============================================================
 
 builder.add_edge(
@@ -113,7 +119,9 @@ builder.add_edge(
     END,
 )
 
-# ============================================================ 
-# COMPILE GRAPH 
-# ============================================================ 
+
+# ============================================================
+# COMPILE
+# ============================================================
+
 graph = builder.compile()

@@ -11,19 +11,23 @@ from .state import AgentState
 from langgraph.config import get_stream_writer
 from app.services.agent.intent import classify_intent
 
-def intent_node(state: AgentState):
-
+async def intent_node(state: AgentState):
+    print("🔥🔥🔥🔥 INTENT NODE HIT")
+    print("PROMPT:", state["prompt"])
     intent = classify_intent(
         state["prompt"]
     )
 
-    return {
-        "intent": intent,
-    }
+    print("🔥🔥🔥🔥 INTENT RESULT:", intent)
 
+    return {
+        "intent": intent
+    }
 async def planner_node(
     state: AgentState,
 ):
+    print("🔥🔥🔥🔥 PLANNER NODE HIT")
+    print("PROMPT:", state["prompt"])
     plan = await create_plan(
         prompt=state["prompt"],
         previous_results=state.get(
@@ -47,7 +51,10 @@ async def executor_node(
 
     context = AgentContext()
 
-    results = {}
+    results = state.get(
+        "tool_results",
+        {},
+    ).copy()
 
     async for event in executor.execute(
         state["plan"],
@@ -60,7 +67,7 @@ async def executor_node(
 
     return {
         "tool_results": results,
-    }
+    } 
 
 def responder_node(state: AgentState):
 

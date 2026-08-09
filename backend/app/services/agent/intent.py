@@ -15,6 +15,7 @@ Classify the user's message into exactly ONE category.
 Categories:
 
 CASUAL
+
 - greetings
 - hello
 - hi
@@ -23,12 +24,15 @@ CASUAL
 - small talk
 
 GENERAL
+
 - general questions
 - technical explanations
 - conceptual questions
-- questions that do not require Career Copilot user data
+- questions that can be answered directly without tools
+- questions that do not require Career Copilot user data or external services
 
 TOOL
+
 - questions requiring the user's Career Copilot data
 - resume information
 - dashboard information
@@ -36,6 +40,11 @@ TOOL
 - roadmap information
 - assessment information
 - personalized career information
+- requests that require searching external services
+- requests involving GitHub repositories
+- requests involving GitHub projects or code
+- requests that require an external API or MCP tool
+- requests to search, fetch, retrieve, or inspect external data
 
 Examples:
 
@@ -54,6 +63,9 @@ Category: GENERAL
 User: explain LangGraph
 Category: GENERAL
 
+User: what is Python?
+Category: GENERAL
+
 User: what is my dashboard status?
 Category: TOOL
 
@@ -61,6 +73,21 @@ User: what skills am I missing?
 Category: TOOL
 
 User: show my learning roadmap
+Category: TOOL
+
+User: analyze my resume
+Category: TOOL
+
+User: find GitHub repositories related to Python
+Category: TOOL
+
+User: find FastAPI projects on GitHub
+Category: TOOL
+
+User: find GitHub projects matching my resume
+Category: TOOL
+
+User: search GitHub for React projects
 Category: TOOL
 
 Return ONLY the category.

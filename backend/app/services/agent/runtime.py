@@ -14,7 +14,8 @@ class AgentRuntime:
         prompt: str,
         thread_id: str,
     ):
-
+        print("🔥🔥 AGENT RUNTIME STARTED")
+        print("PROMPT:", prompt)
         state = {
             "prompt": prompt,
         }
@@ -27,6 +28,7 @@ class AgentRuntime:
             **get_graph_config(thread_id),
             "recursion_limit": 20,
         }
+        print("🔥🔥🔥 STARTING LANGGRAPH")
 
         async for event in graph.astream(
             state,

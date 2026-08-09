@@ -28,11 +28,12 @@ async def chat(
     payload: ChatRequest,
     db: Session = Depends(get_db),
 ):
-
+    print("🔥 CHAT ENDPOINT HIT")
+    print("USER MESSAGE:", payload.message)
     runtime = AgentRuntime(db)
 
     async def event_generator():
-
+        print("🔥 EVENT GENERATOR STARTED")
         async for event in runtime.run(
             prompt=payload.message,
             thread_id="career-copilot",

@@ -14,7 +14,11 @@ class AgentExecutor:
         context,
         previous_results,
     ):
-
+        print("\n===== EXECUTOR =====")
+        print("Tool:", step.tool)
+        print("Source:", step.source)
+        print("Arguments:", step.arguments)
+        print("====================\n")
         yield {
             "type": "tool_start",
             "tool": step.tool,

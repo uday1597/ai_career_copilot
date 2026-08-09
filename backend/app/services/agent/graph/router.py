@@ -1,7 +1,7 @@
 from .state import AgentState
 
 
-def router(state: AgentState):
+def route_after_planner(state: AgentState):
 
     plan = state["plan"]
 
@@ -9,6 +9,7 @@ def router(state: AgentState):
         return "executor"
 
     return "responder"
+
 
 def route_after_intent(
     state: AgentState,
@@ -20,7 +21,6 @@ def route_after_intent(
     )
 
     if intent == "TOOL":
-
         return "planner"
 
     return "responder"

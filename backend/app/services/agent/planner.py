@@ -85,7 +85,8 @@ async def create_plan(
     prompt: str,
     previous_results: dict | None = None,
 ) -> ExecutionPlan:
-
+    print("🔥 CREATE PLAN CALLED")
+    print("PROMPT:", prompt)
     # ---------------------------------------
     # Discover MCP tools
     # ---------------------------------------
@@ -151,6 +152,12 @@ async def create_plan(
         .strip()
     )
 
-    return ExecutionPlan.model_validate(
+    plan = ExecutionPlan.model_validate(
         json.loads(text)
     )
+
+    print("\n===== PLANNER PLAN =====")
+    print(plan.model_dump_json(indent=2))
+    print("========================\n")
+
+    return plan
