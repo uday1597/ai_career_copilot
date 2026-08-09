@@ -24,7 +24,7 @@ export default function AssessmentChoiceDialog({
 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
 
-            <div className="w-full max-w-lg rounded-xl bg-white p-8 shadow-xl">
+            <div className="w-full max-w-lg rounded-xl bg-[var(--surface)] p-8 shadow-xl">
 
                 <h2 className="text-2xl font-bold">
                     Assessment Found

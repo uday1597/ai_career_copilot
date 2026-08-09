@@ -14,7 +14,7 @@ export default function MCQCard({
 
     return (
 
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-[var(--surface)] p-6">
 
             <h2 className="text-xl font-semibold">
                 {question.question}
@@ -36,7 +36,7 @@ export default function MCQCard({
                                 ${
                                     selected === index
                                         ? "border-indigo-600 bg-indigo-50"
-                                        : "hover:bg-slate-50"
+                                        : "hover:bg-[var(--background)]"
                                 }
                             `}
                         >

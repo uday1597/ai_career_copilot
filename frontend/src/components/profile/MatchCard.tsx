@@ -9,7 +9,7 @@ export default function LatestMatchCard({ match }: Props) {
     if (!match) {
 
         return (
-            <div className="rounded-xl bg-white p-6 shadow">
+            <div className="rounded-xl bg-[var(--surface)] p-6 shadow">
                 <h2 className="text-xl font-semibold">
                     Latest Match
                 </h2>
@@ -24,7 +24,7 @@ export default function LatestMatchCard({ match }: Props) {
 
     return (
 
-        <div className="rounded-xl bg-white p-6 shadow">
+        <div className="rounded-xl bg-[var(--surface)] p-6 shadow">
 
             <div className="flex justify-between items-center">
 

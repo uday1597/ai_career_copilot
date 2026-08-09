@@ -13,7 +13,7 @@ export default function ScoreCard({
 
     return (
 
-        <div className="rounded-xl border bg-white p-8 shadow-sm">
+        <div className="rounded-xl border bg-[var(--surface)] p-8 shadow-sm">
 
             <h2 className="text-2xl font-bold">
                 Assessment Result

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-import AppLayout from "@/src/components/layout/AppLayout";
 
 import {
     getAssessment,
@@ -123,15 +122,11 @@ export default function AssessmentPage() {
 
         return (
 
-            <AppLayout>
-
-                <div className="rounded-xl border bg-white p-10 text-center">
+                <div className="rounded-xl border bg-[var(--surface)] p-10 text-center">
 
                     Loading Assessment...
 
                 </div>
-
-            </AppLayout>
 
         );
 
@@ -140,28 +135,20 @@ export default function AssessmentPage() {
     if (!assessment) {
 
         return (
-
-            <AppLayout>
-
-                <div className="rounded-xl border bg-white p-10 text-center">
+                <div className="rounded-xl border bg-[var(--surface)] p-10 text-center">
 
                     Assessment could not be loaded.
 
                 </div>
-
-            </AppLayout>
-
         );
 
     }
 
     return (
-
-        <AppLayout>
-
+        <div className="p-6 lg:p-8">
             <div className="space-y-8">
 
-                <div className="rounded-xl border bg-white p-6 shadow-sm">
+                <div className="rounded-xl border bg-[var(--surface)] p-6 shadow-sm">
 
                     <h1 className="text-3xl font-bold">
 
@@ -251,9 +238,7 @@ export default function AssessmentPage() {
                 </div>
 
             </div>
-
-        </AppLayout>
-
+        </div>
     );
 
 }

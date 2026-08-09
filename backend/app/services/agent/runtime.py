@@ -1,6 +1,7 @@
-from app.services.agent.graph.graph import graph
 from app.services.agent.graph.config import get_graph_config
+from app.services.agent.graph.graph import graph
 from app.services.agent.graph.event_mapper import map_graph_event
+from app.services.agent.graph.runtime_context import AgentRuntimeContext
 
 
 class AgentRuntime:
@@ -8,18 +9,52 @@ class AgentRuntime:
     def __init__(self, db):
         self.db = db
 
-    def run(self, prompt: str):
+    async def run(
+        self,
+        prompt: str,
+        thread_id: str,
+    ):
 
         state = {
             "prompt": prompt,
-            "db": self.db,
         }
 
-        for event in graph.stream(
-            state,
-            config={**get_graph_config("career-copilot"),"recursion_limit": 20,}
-        ):
-            event = map_graph_event(event)
+        runtime_context = AgentRuntimeContext(
+            db=self.db,
+        )
 
-            if event:
-                yield event
+        config = {
+            **get_graph_config(thread_id),
+            "recursion_limit": 20,
+        }
+
+        async for event in graph.astream(
+            state,
+            config=config,
+            context=runtime_context,
+            stream_mode=["updates", "custom"],
+        ):
+
+            mode, data = event
+
+            # -----------------------------
+            # Custom responder token
+            # -----------------------------
+
+            if mode == "custom":
+
+                yield data
+
+                continue
+
+            # -----------------------------
+            # Normal graph update
+            # -----------------------------
+
+            if mode == "updates":
+
+                mapped_event = map_graph_event(data)
+
+                if mapped_event:
+
+                    yield mapped_event

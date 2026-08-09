@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-import AppLayout from "@/src/components/layout/AppLayout";
-
 import { getAssessmentResult } from "@/src/services/assessment";
 
 import { Assessment } from "@/src/types/assessment";
@@ -47,11 +45,9 @@ export default function AssessmentResultPage() {
 
         return (
 
-            <AppLayout>
-
+                <div>
                 Loading...
-
-            </AppLayout>
+                </div>
 
         );
 
@@ -59,8 +55,7 @@ export default function AssessmentResultPage() {
 
     return (
 
-        <AppLayout>
-
+        <div className="p-6 lg:p-8">
             <div className="space-y-6">
 
                 <ScoreCard
@@ -96,9 +91,7 @@ export default function AssessmentResultPage() {
                 />
 
             </div>
-
-        </AppLayout>
-
+        </div>            
     );
 
 }

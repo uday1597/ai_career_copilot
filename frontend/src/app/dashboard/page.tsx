@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import AppLayout from "@/src/components/layout/AppLayout";
-
 import { Dashboard } from "@/src/types/dashboard";
-
 import { getDashboard } from "@/src/services/dashboard";
 
 import DashboardHeader from "@/src/components/dashboard/DashboardHeader";
@@ -15,7 +12,6 @@ import AssessmentSummaryCard from "@/src/components/dashboard/AssessmentSummaryC
 import SkillsCard from "@/src/components/dashboard/SkillsCard";
 
 export default function DashboardPage() {
-
     const [dashboard, setDashboard] =
         useState<Dashboard | null>(null);
 
@@ -23,76 +19,46 @@ export default function DashboardPage() {
         useState(true);
 
     useEffect(() => {
-
         loadDashboard();
-
     }, []);
 
     async function loadDashboard() {
-
         try {
-
-            const result =
-                await getDashboard();
-
+            const result = await getDashboard();
             setDashboard(result);
-
-        }
-
-        finally {
-
+        } finally {
             setLoading(false);
-
         }
-
     }
 
     if (loading) {
-
         return (
-
-            <AppLayout>
-
-                <div className="rounded-xl border bg-white p-10 text-center">
-
+            <div className="p-8">
+                <div className="rounded-xl border bg-[var(--surface)] p-10 text-center">
                     Loading Dashboard...
-
                 </div>
-
-            </AppLayout>
-
+            </div>
         );
-
     }
 
     if (!dashboard) {
-
         return (
-
-            <AppLayout>
-
-                <div className="rounded-xl border bg-white p-10 text-center">
-
+            <div className="p-8">
+                <div className="rounded-xl border bg-[var(--surface)] p-10 text-center">
                     Dashboard unavailable.
-
                 </div>
-
-            </AppLayout>
-
+            </div>
         );
-
     }
 
     return (
-
-        <AppLayout>
-
+        <div className="p-6 lg:p-8">
+        <div className="h-full overflow-y-auto p-8">
             <div className="space-y-6">
 
                 <DashboardHeader />
 
                 <div className="grid gap-6 md:grid-cols-2">
-
                     <MatchCard
                         match={dashboard.latest_match}
                     />
@@ -100,27 +66,20 @@ export default function DashboardPage() {
                     <RoadmapProgressCard
                         roadmap={dashboard.roadmap}
                     />
-
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2">
-
                     <AssessmentSummaryCard
-                        assessment={
-                            dashboard.assessments
-                        }
+                        assessment={dashboard.assessments}
                     />
 
                     <SkillsCard
                         skills={dashboard.skills}
                     />
-
                 </div>
 
             </div>
-
-        </AppLayout>
-
+        </div>
+        </div>
     );
-
 }

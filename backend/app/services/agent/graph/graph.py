@@ -1,43 +1,119 @@
-from langgraph.graph import StateGraph
+from langgraph.graph import END, START, StateGraph
 
 from .state import AgentState
-from .nodes import planner_node, executor_node, responder_node
-from .router import router
-from .memory import memory
 
-builder = StateGraph(AgentState)
+from .nodes import (
+    intent_node,
+    planner_node,
+    executor_node,
+    responder_node,
+)
+
+from .router import (
+    route_after_intent,
+)
+
+
+# ============================================================
+# GRAPH BUILDER
+# ============================================================
+
+builder = StateGraph(
+    AgentState
+)
+
+
+# ============================================================
+# NODES
+# ============================================================
+
+builder.add_node(
+    "intent",
+    intent_node,
+)
 
 builder.add_node(
     "planner",
-    planner_node
+    planner_node,
 )
 
 builder.add_node(
     "executor",
-    executor_node
+    executor_node,
 )
 
 builder.add_node(
     "responder",
-    responder_node
+    responder_node,
 )
 
-builder.set_entry_point(
-    "planner"
+
+# ============================================================
+# START
+# ============================================================
+
+builder.add_edge(
+    START,
+    "intent",
 )
+
+
+# ============================================================
+# INTENT ROUTING
+#
+# CASUAL / GENERAL
+#       ↓
+#   responder
+#
+# TOOL
+#       ↓
+#   planner
+# ============================================================
 
 builder.add_conditional_edges(
+    "intent",
+
+    route_after_intent,
+
+    {
+        "planner": "planner",
+
+        "responder": "responder",
+    },
+)
+
+
+# ============================================================
+# TOOL PIPELINE
+#
+# planner
+#    ↓
+# executor
+#    ↓
+# responder
+# ============================================================
+
+builder.add_edge(
     "planner",
-    router,
+    "executor",
 )
 
 builder.add_edge(
     "executor",
-    "planner",
+    "responder",
 )
 
-builder.set_finish_point(
-    "responder"
+
+# ============================================================
+# END
+# ============================================================
+
+builder.add_edge(
+    "responder",
+    END,
 )
 
+# ============================================================ 
+# COMPILE GRAPH 
+# ============================================================ 
 graph = builder.compile()

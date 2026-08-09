@@ -1,74 +1,90 @@
+from langgraph.runtime import Runtime
+
 from app.services.agent.context import AgentContext
 from app.services.agent.executor import AgentExecutor
 from app.services.agent.planner import create_plan
 from app.services.agent.responder import stream_response
 
+from .runtime_context import AgentRuntimeContext
 from .state import AgentState
 
+from langgraph.config import get_stream_writer
+from app.services.agent.intent import classify_intent
 
-def planner_node(state: AgentState):
+def intent_node(state: AgentState):
 
-    plan = create_plan(
+    intent = classify_intent(
+        state["prompt"]
+    )
+
+    return {
+        "intent": intent,
+    }
+
+async def planner_node(
+    state: AgentState,
+):
+    plan = await create_plan(
         prompt=state["prompt"],
         previous_results=state.get(
             "tool_results",
             {},
         ),
     )
-    print("=== Planner ===")
-    print(state["prompt"])
+
     return {
         "plan": plan,
     }
 
-
-def executor_node(state: AgentState):
+async def executor_node(
+    state: AgentState,
+    runtime: Runtime[AgentRuntimeContext],
+):
 
     executor = AgentExecutor(
-        state["db"]
+        runtime.context.db
     )
 
-    context = state.get("context")
+    context = AgentContext()
 
-    if context is None:
-        context = AgentContext()
+    results = {}
 
-    results = state.get(
-        "tool_results",
-        {},
-    )
-
-    step = state["plan"].steps[0]
-
-    for event in executor.execute_step(
-        step,
+    async for event in executor.execute(
+        state["plan"],
         context,
-        results,
     ):
-        pass
-    print("=== Executor ===")
-    print(state["plan"].steps[0])
+
+        if event["type"] == "tool_end":
+
+            results[event["tool"]] = event["result"]
+
     return {
         "tool_results": results,
-        "context": context,
     }
 
-
 def responder_node(state: AgentState):
+
+    writer = get_stream_writer()
 
     answer = ""
 
     for token in stream_response(
         state["prompt"],
-        state.get(
-            "tool_results",
-            {},
-        ),
+        state.get("tool_results", {}),
     ):
+
         answer += token
 
-    print("=== Responder ===")
-    print(answer)
+        writer({
+            "type": "token",
+            "content": token,
+        })
+
+    writer({
+        "type": "complete",
+        "answer": answer,
+    })
+
     return {
         "answer": answer,
     }

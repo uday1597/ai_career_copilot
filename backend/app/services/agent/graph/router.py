@@ -3,8 +3,24 @@ from .state import AgentState
 
 def router(state: AgentState):
 
-    if len(state["plan"].steps):
+    plan = state["plan"]
 
+    if plan.steps:
         return "executor"
+
+    return "responder"
+
+def route_after_intent(
+    state: AgentState,
+):
+
+    intent = state.get(
+        "intent",
+        "GENERAL",
+    )
+
+    if intent == "TOOL":
+
+        return "planner"
 
     return "responder"

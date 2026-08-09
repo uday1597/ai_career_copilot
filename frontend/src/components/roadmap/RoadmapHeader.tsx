@@ -8,7 +8,7 @@ export default function RoadmapHeader({
 
     return(
 
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-[var(--surface)] p-6">
 
             <h1 className="text-3xl font-bold">
                 Personalized Learning Roadmap

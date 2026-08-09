@@ -6,7 +6,7 @@ interface Props {
 
 export default function JobCard({ job }: Props) {
     return (
-        <div className="rounded-xl bg-white p-5 shadow transition hover:shadow-lg">
+        <div className="rounded-xl bg-[var(--surface)] p-5 shadow transition hover:shadow-lg">
             <h2 className="text-xl font-bold text-slate-900">
                 {job.title}
             </h2>

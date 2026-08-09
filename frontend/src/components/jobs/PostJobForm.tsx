@@ -72,7 +72,7 @@ export default function PostJobForm() {
 
         <form
             onSubmit={handleSubmit}
-            className="rounded-xl border bg-white p-6 shadow-sm space-y-5"
+            className="rounded-xl border bg-[var(--surface)] p-6 shadow-sm space-y-5"
         >
 
             <h2 className="text-2xl font-bold">

@@ -22,7 +22,7 @@ export default function JobDropdown({
             <select
                 value={selectedJobId}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                className="w-full rounded-lg border border-slate-300 bg-[var(--surface)] p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
             >
                 <option value="">
                     -- Select a Job --

@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AppLayout from "../../components/layout/AppLayout";
-import CurrentResume from "../../components/resume/CurrentResume";
 import JobDropdown from "../../components/match/JobDropdown";
 import ResumeDropdown from "../../components/match/ResumeDropdown";
 import { getJobs } from "../../services/jobs";
@@ -73,7 +71,7 @@ export default function MatchPage() {
     }
 
     return (
-        <AppLayout>
+        <div className="p-6 lg:p-8">
 
             <div className="space-y-6">
 
@@ -156,7 +154,6 @@ export default function MatchPage() {
 
                     )}
             </div>
-
-        </AppLayout>
+        </div>
     );
 }

@@ -19,7 +19,7 @@ export default function CurrentResume() {
 
     return (
 
-        <div className="rounded-xl border bg-white p-5">
+        <div className="rounded-xl border bg-[var(--surface)] p-5">
 
             <h2 className="text-lg font-semibold">
                 Current Resume

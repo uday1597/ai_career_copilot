@@ -8,7 +8,7 @@ interface Props {
 export default function JobList({ jobs }: Props) {
     if (jobs.length === 0) {
         return (
-            <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
+            <div className="rounded-xl border border-dashed border-slate-300 bg-[var(--surface)] p-8 text-center text-slate-500">
                 No jobs found. Click <strong>Discover Jobs</strong> to load opportunities.
             </div>
         );

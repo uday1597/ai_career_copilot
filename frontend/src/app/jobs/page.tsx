@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import AppLayout from "../../components/layout/AppLayout";
 import JobSearch from "../../components/jobs/JobSearch";
 import JobList from "../../components/jobs/JobList";
 import PostJobForm from "../../components/jobs/PostJobForm";
@@ -39,7 +38,7 @@ export default function JobsPage() {
     }
 
     return (
-        <AppLayout>
+        <div className="p-6 lg:p-8">
             <div className="space-y-6">
                 <div>
                     <h1 className="text-3xl font-bold">
@@ -85,7 +84,7 @@ export default function JobsPage() {
                         />
 
                         {loading && (
-                            <div className="rounded-lg border bg-white p-6 text-center">
+                            <div className="rounded-lg border bg-[var(--surface)] p-6 text-center">
                                 Loading jobs...
                             </div>
                         )}
@@ -106,6 +105,6 @@ export default function JobsPage() {
                     <PostJobForm />
                 )}
             </div>
-        </AppLayout>
+        </div>
     );
 }

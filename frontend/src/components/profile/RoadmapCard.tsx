@@ -10,7 +10,7 @@ export default function RoadmapCard({ roadmap }: Props) {
 
         return (
 
-            <div className="rounded-xl bg-white p-6 shadow">
+            <div className="rounded-xl bg-[var(--surface)] p-6 shadow">
 
                 <h2 className="text-xl font-semibold">
                     Learning Roadmap
@@ -28,7 +28,7 @@ export default function RoadmapCard({ roadmap }: Props) {
 
     return (
 
-        <div className="rounded-xl bg-white p-6 shadow">
+        <div className="rounded-xl bg-[var(--surface)] p-6 shadow">
 
             <h2 className="text-xl font-semibold">
                 Learning Progress

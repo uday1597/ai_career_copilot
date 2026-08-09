@@ -53,7 +53,7 @@ export default function DashboardPage() {
 
             <AppLayout>
 
-                <div className="rounded-xl border bg-white p-10 text-center">
+                <div className="rounded-xl border bg-[var(--surface)] p-10 text-center">
 
                     Loading Dashboard...
 
@@ -71,7 +71,7 @@ export default function DashboardPage() {
 
             <AppLayout>
 
-                <div className="rounded-xl border bg-white p-10 text-center">
+                <div className="rounded-xl border bg-[var(--surface)] p-10 text-center">
 
                     Dashboard unavailable.
 

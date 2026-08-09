@@ -1,9 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-import AppLayout from "../../components/layout/AppLayout";
-
 import { useMatch } from "../../context/MatchContext";
 
 import { LearningRoadmap } from "@/src/types/roadMap";
@@ -230,9 +227,7 @@ export default function RoadmapPage() {
 
     }
     return (
-
-        <AppLayout>
-
+        <div className="p-6 lg:p-8">
             <div className="space-y-6">
 
                 <RoadmapHeader
@@ -241,7 +236,7 @@ export default function RoadmapPage() {
 
                 {matchResult && (
 
-                    <div className="rounded-xl border bg-white p-6 shadow-sm">
+                    <div className="rounded-xl border bg-[var(--surface)] p-6 shadow-sm">
 
                         <h2 className="text-lg font-semibold">
                             AI Career Recommendation
@@ -286,9 +281,7 @@ export default function RoadmapPage() {
                     }
                 />
             </div>
-
-        </AppLayout>
-
+        </div>
     );
 
 }

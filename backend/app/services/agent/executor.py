@@ -1,3 +1,4 @@
+from app.services.agent.mcp.github import GitHubMCPClient
 from app.services.agent.tools.registery import TOOL_REGISTRY
 
 
@@ -5,47 +6,75 @@ class AgentExecutor:
 
     def __init__(self, db):
         self.db = db
+        self.github_mcp = GitHubMCPClient()
 
-    def execute_step(
+    async def execute_step(
         self,
         step,
         context,
         previous_results,
     ):
 
-        tool = TOOL_REGISTRY.get(step.tool.value)
-
-        if tool is None:
-            raise Exception(
-                f"Unknown tool {step.tool}"
-            )
-
         yield {
             "type": "tool_start",
-            "tool": step.tool.value,
+            "tool": step.tool,
             "reason": step.reason,
         }
 
-        result = tool(
-            db=self.db,
-            context=context,
-            previous_results=previous_results,
-        )
+        # --------------------------------
+        # INTERNAL TOOL
+        # --------------------------------
+
+        if step.source == "internal":
+
+            tool = TOOL_REGISTRY.get(step.tool)
+
+            if tool is None:
+                raise Exception(
+                    f"Unknown internal tool: {step.tool}"
+                )
+
+            result = tool(
+                db=self.db,
+                context=context,
+                previous_results=previous_results,
+            )
+
+        # --------------------------------
+        # MCP TOOL
+        # --------------------------------
+
+        elif step.source == "mcp":
+
+            result = await self.github_mcp.call_tool(
+                step.tool,
+                step.arguments,
+            )
+
+        else:
+
+            raise Exception(
+                f"Unknown tool source: {step.source}"
+            )
+
+        # --------------------------------
+        # SAVE RESULT
+        # --------------------------------
 
         context.put(
-            step.tool.value,
+            step.tool,
             result,
         )
 
-        previous_results[step.tool.value] = result
+        previous_results[step.tool] = result
 
         yield {
             "type": "tool_end",
-            "tool": step.tool.value,
+            "tool": step.tool,
             "result": result,
         }
 
-    def execute(
+    async def execute(
         self,
         plan,
         context,
@@ -55,10 +84,9 @@ class AgentExecutor:
 
         for step in plan.steps:
 
-            yield from self.execute_step(
+            async for event in self.execute_step(
                 step,
                 context,
                 results,
-            )
-
-        return results
+            ):
+                yield event

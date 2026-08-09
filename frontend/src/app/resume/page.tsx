@@ -1,6 +1,5 @@
 "use client";
 
-import AppLayout from "../../components/layout/AppLayout";
 import ResumeUpload from "../../components/resume/ResumeUpload";
 import ResumeSummary from "../../components/resume/ResumeSummary";
 import TechnologyList from "../../components/resume/TechnologyList";
@@ -13,9 +12,7 @@ export default function ResumePage() {
     const { resume, setResume } = useResume();
 
     return (
-
-        <AppLayout>
-
+        <div className="p-6 lg:p-8">
             <div className="space-y-6">
                 {resume && (
                     <ResumePreview resume={resume} />
@@ -37,8 +34,6 @@ export default function ResumePage() {
                 )}
 
             </div>
-
-        </AppLayout>
-
+        </div>
     );
 }

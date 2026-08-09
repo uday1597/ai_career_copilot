@@ -9,7 +9,6 @@ import StatsCards from "@/src/components/profile/StatsCards";
 import MatchCard from "@/src/components/profile/MatchCard";
 import RoadmapCard from "@/src/components/profile/RoadmapCard";
 import AssessmentCard from "@/src/components/profile/AssessmentCard";
-import AppLayout from "@/src/components/layout/AppLayout";
 
 export default function ProfilePage() {
 
@@ -43,7 +42,6 @@ export default function ProfilePage() {
 
     if (loading) {
         return (
-            <AppLayout>
                 <div className="flex h-[70vh] items-center justify-center">
                     <div className="text-center">
                         <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
@@ -52,16 +50,15 @@ export default function ProfilePage() {
                         </p>
                     </div>
                 </div>
-            </AppLayout>
         );
     }
 
     if (!profile)
         return <p>No profile found.</p>;
 
-    return (
-        <AppLayout>
-    
+    return (    
+        <div className="p-6 lg:p-8">
+
             <div className="space-y-8">
     
                 <HeroCard
@@ -89,8 +86,7 @@ export default function ProfilePage() {
                 />
     
             </div>
-    
-        </AppLayout>
-    );
+        </div>
+        );
 
 }

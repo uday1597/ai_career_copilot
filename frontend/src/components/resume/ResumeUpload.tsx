@@ -41,7 +41,7 @@ export default function ResumeUpload({
   };
 
   return (
-    <div className="rounded-xl border-2 border-dashed border-slate-300 bg-white p-10 text-center">
+    <div className="rounded-xl border-2 border-dashed border-slate-300 bg-[var(--surface)] p-10 text-center">
       <Upload className="mx-auto h-12 w-12 text-slate-500" />
 
       <h2 className="mt-4 text-xl font-semibold">

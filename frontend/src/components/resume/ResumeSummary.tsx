@@ -9,7 +9,7 @@ export default function ResumeSummary({
 }: ResumeSummaryProps) {
 
     return (
-        <div className="rounded-xl bg-white p-6 shadow">
+        <div className="rounded-xl bg-[var(--surface)] p-6 shadow">
 
             <h2 className="text-xl font-semibold mb-4">
                 Resume Summary

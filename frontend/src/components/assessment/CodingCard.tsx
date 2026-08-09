@@ -14,7 +14,7 @@ export default function CodingCard({
 
     return (
 
-        <div className="rounded-xl border bg-white p-6">
+        <div className="rounded-xl border bg-[var(--surface)] p-6">
 
             <h2 className="text-xl font-semibold">
                 {question.title}

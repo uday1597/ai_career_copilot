@@ -14,7 +14,7 @@ export default function AssessmentHeader({
 
     return (
 
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border bg-[var(--surface)] p-6 shadow-sm">
 
             <h1 className="text-3xl font-bold">
                 {title}

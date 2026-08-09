@@ -6,7 +6,7 @@ interface Props {
 
 export default function HeroCard({ profile }: Props) {
     return (
-        <div className="relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 shadow-lg">
+        <div className="relative overflow-hidden rounded-3xl border border-gray-200 bg-[var(--surface)] p-8 shadow-lg">
             <div className="flex items-center gap-5">
                 <div className="flex h-20 w-20 items-center justify-center rounded-full bg-indigo-100 text-3xl font-bold text-indigo-700">
                     {profile.resume_filename.charAt(0).toUpperCase()}

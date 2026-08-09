@@ -1,28 +1,25 @@
+"use client";
+
 import Sidebar from "./Sidebar";
-import Header from "./Header";
 
 export default function AppLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  return (
-    <div className="flex h-screen">
+    return (
+        <div className="flex h-screen overflow-hidden bg-[var(--background)]">
+            <Sidebar />
 
-    <Sidebar />
-
-    <div className="flex flex-1 flex-col">
-
-        <Header />
-
-        <main className="flex-1 overflow-y-auto p-8 bg-slate-50">
-
-            {children}
-
-        </main>
-
-    </div>
-
-</div>
-  );
+            <main className="
+                min-w-0
+                flex-1
+                overflow-y-auto
+                bg-[var(--background)]
+                text-[var(--foreground)]
+            ">
+                {children}
+            </main>
+        </div>
+    );
 }

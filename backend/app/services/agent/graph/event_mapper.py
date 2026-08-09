@@ -1,30 +1,39 @@
 def map_graph_event(event):
 
+    if not event:
+        return None
+
     if "planner" in event:
+
+        plan = event["planner"].get("plan")
+
+        if plan is None:
+            return None
 
         return {
             "type": "plan",
             "steps": [
                 {
-                    "tool": step.tool.value,
+                    "tool": step.tool,
                     "reason": step.reason,
                 }
-                for step in event["planner"]["plan"].steps
+                for step in plan.steps
             ],
         }
 
     if "executor" in event:
 
+        results = event["executor"].get(
+            "tool_results",
+            {},
+        )
+
         return {
-            "type": "tool_results",
-            "result": event["executor"]["tool_results"],
+            "type": "tools",
+            "results": results,
         }
 
     if "responder" in event:
-
-        return {
-            "type": "complete",
-            "answer": event["responder"]["answer"],
-        }
+        return None
 
     return None

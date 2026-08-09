@@ -1,9 +1,7 @@
 "use client";
 
-import DashboardPage from "./dashboard/page";
+import ChatPage from "@/src/components/chat/ChatPage";
 
-export default function Home() {
-
-    return <DashboardPage />;
-
+export default function HomePage() {
+    return <ChatPage />;
 }

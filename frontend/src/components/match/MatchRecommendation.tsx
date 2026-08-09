@@ -39,7 +39,7 @@ export default function MatchRecommendation({
 
     return (
 
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border bg-[var(--surface)] p-6 shadow-sm">
 
             <h2 className="text-xl font-semibold">
                 Recommendation
