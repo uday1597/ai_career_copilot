@@ -42,6 +42,7 @@ class AgentExecutor:
                 db=self.db,
                 context=context,
                 previous_results=previous_results,
+                **step.arguments,
             )
 
         # --------------------------------

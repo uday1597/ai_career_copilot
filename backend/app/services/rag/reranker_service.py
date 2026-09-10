@@ -1,7 +1,10 @@
+import re
+
 from app.models.knowledge_document import KnowledgeDocument
+from app.services.rag.base_reranker import BaseReRanker
 
 
-class ReRankerService:
+class ReRankerService(BaseReRanker):
 
     def rerank(
         self,
@@ -10,19 +13,23 @@ class ReRankerService:
         top_k: int = 5,
     ) -> list[KnowledgeDocument]:
 
-        query_words = {
-            word.lower()
-            for word in query.split()
-        }
+        query_words = set(
+            re.findall(
+                r"\b\w+\b",
+                query.lower(),
+            )
+        )
 
         scored = []
 
         for document in documents:
 
-            content_words = {
-                word.lower()
-                for word in document.content.split()
-            }
+            content_words = set(
+                re.findall(
+                    r"\b\w+\b",
+                    document.content.lower(),
+                )
+            )
 
             score = len(
                 query_words.intersection(

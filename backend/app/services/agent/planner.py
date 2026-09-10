@@ -35,7 +35,32 @@ Rules:
 - For internal tools, use source="internal".
 - For MCP tools, use source="mcp".
 - When selecting an MCP tool, provide the required arguments according to its input schema.
-- Only select an MCP tool if it is appropriate for the user's request.
+- Only select a tool that is appropriate for the user's request.
+
+RAG TOOL:
+
+- Use "search_knowledge_base" when the answer requires
+  information from Career Copilot's stored knowledge base.
+
+- The knowledge base may contain:
+  resume, target job, assessment, roadmap, and other
+  ingested career documents.
+
+- Examples:
+  "What skills are missing for my target job?"
+  "What technologies are missing from my resume?"
+  "What are my weaknesses?"
+  "Compare my resume with the target job."
+  "What did my assessment say?"
+  "What should I learn next?"
+
+- When selecting "search_knowledge_base", pass the user's
+  question as the "question" argument.
+
+- Do not use RAG merely because the question is career-related.
+  Use it only when information from the stored knowledge base
+  is required.
+
 - Return ONLY valid JSON.
 
 Example internal tool:
@@ -47,6 +72,21 @@ Example internal tool:
             "source": "internal",
             "reason": "Need the user's resume information.",
             "arguments": {{}}
+        }}
+    ]
+}}
+
+Example RAG tool:
+
+{{
+    "steps": [
+        {{
+            "tool": "search_knowledge_base",
+            "source": "internal",
+            "reason": "Need information from the user's stored career documents.",
+            "arguments": {{
+                "question": "What skills are missing for my target job?"
+            }}
         }}
     ]
 }}

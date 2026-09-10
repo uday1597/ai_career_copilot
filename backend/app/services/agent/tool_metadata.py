@@ -55,5 +55,31 @@ TOOLS = [
             },
             "required": ["week"]
         }
+    },
+
+    {
+        "type": "function",
+        "name": "search_knowledge_base",
+        "description": (
+            "Search Career Copilot's private knowledge base "
+            "using semantic, keyword, reranking and context "
+            "compression based retrieval. Use this when the "
+            "user asks about information contained in their "
+            "resume, target jobs, assessments, roadmap, notes "
+            "or other uploaded knowledge."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "question": {
+                    "type": "string",
+                    "description": (
+                        "The user's question to search "
+                        "the knowledge base for."
+                    ),
+                }
+            },
+            "required": ["question"],
+        },
     }
 ]

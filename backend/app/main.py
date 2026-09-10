@@ -16,6 +16,7 @@ from app.api.routes.assistant import router as assistant_router
 from app.api.rag import router as rag_router
 import os
 from app.api.v1.profile import router as profile_router
+from app.api.v1.ingestion import router as ingestion_router
 
 app = FastAPI(
     title="Career Copilot",
@@ -51,6 +52,7 @@ app.include_router(dashboard_router)
 app.include_router(assistant_router)
 app.include_router(rag_router)
 app.include_router(profile_router)
+app.include_router(ingestion_router)
 
 @app.on_event("startup")
 def startup():

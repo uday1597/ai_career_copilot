@@ -68,16 +68,71 @@ async def executor_node(
     return {
         "tool_results": results,
     } 
-
 def responder_node(state: AgentState):
+
+    print("\n" + "=" * 60)
+    print("🚀 RESPONDER NODE REACHED")
+    print("=" * 60)
 
     writer = get_stream_writer()
 
     answer = ""
 
+    tool_results = state.get("tool_results", {})
+
+    print("📦 Tool results:")
+    print(tool_results)
+
+    # -------------------------------------------------
+    # RAG already generated the final grounded answer
+    # -------------------------------------------------
+
+    if isinstance(tool_results, dict):
+
+        rag_result = tool_results.get(
+            "search_knowledge_base"
+        )
+
+        if rag_result:
+
+            print("\n" + "-" * 60)
+            print("🧠 RAG RESULT DETECTED")
+            print("✅ Skipping stream_response()")
+            print("-" * 60)
+
+            print(f"📝 RAG Answer:\n{rag_result}")
+
+            answer = rag_result
+
+            writer({
+                "type": "token",
+                "content": answer,
+            })
+
+            writer({
+                "type": "complete",
+                "answer": answer,
+            })
+
+            print("✅ RAG answer streamed directly to client")
+            print("=" * 60 + "\n")
+
+            return {
+                "answer": answer,
+            }
+
+    # -------------------------------------------------
+    # Normal tools → responder LLM
+    # -------------------------------------------------
+
+    print("\n" + "-" * 60)
+    print("🤖 NO RAG RESULT")
+    print("➡️ Calling stream_response()")
+    print("-" * 60)
+
     for token in stream_response(
         state["prompt"],
-        state.get("tool_results", {}),
+        tool_results,
     ):
 
         answer += token
@@ -91,6 +146,10 @@ def responder_node(state: AgentState):
         "type": "complete",
         "answer": answer,
     })
+
+    print(f"📝 Final responder answer:\n{answer}")
+    print("✅ Response streamed through stream_response()")
+    print("=" * 60 + "\n")
 
     return {
         "answer": answer,

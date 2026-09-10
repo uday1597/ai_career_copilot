@@ -100,35 +100,41 @@ class RetrievalService:
     def hybrid_search(
         self,
         db,
-        query,
-        top_k=5,
-        document_type=None,
+        query: str,
+        top_k: int = 5,
+        document_type: str | None = None,
     ):
-
         vector_results = self.vector_search(
-            db,
-            query,
-            top_k,
-            document_type=document_type
+            db=db,
+            query=query,
+            top_k=top_k,
+            document_type=document_type,
         )
 
         keyword_results = self.keyword_search(
-            db,
-            query,
-            top_k,
-            document_type=document_type
+            db=db,
+            query=query,
+            limit=top_k,
+            document_type=document_type,
         )
 
         merged = {}
 
         for document in vector_results:
-
             merged[document.id] = document
 
         for document in keyword_results:
-
             merged[document.id] = document
 
-        return list(
-            merged.values()
-        )[:top_k]
+        candidates = list(merged.values())
+
+        if not candidates:
+            return []
+
+        reranked = self.reranker.rerank(
+            query=query,
+            documents=candidates,
+            top_k=top_k,
+        )
+
+        return reranked
