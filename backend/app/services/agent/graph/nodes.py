@@ -66,7 +66,7 @@ state: AgentState,
     print(
         "🧠 PLANNER RETURNED:",
         [
-            step.tool.value
+            step.tool
             for step in plan.steps
         ],
     )

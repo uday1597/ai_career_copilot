@@ -251,7 +251,7 @@ Decide the NEXT tool.
     plan.steps = [
         step
         for step in plan.steps
-        if step.tool.value not in executed_tools
+        if step.tool not in executed_tools
     ]
 
     # ---------------------------------------
@@ -263,7 +263,7 @@ Decide the NEXT tool.
     print(
         "LLM PLAN:",
         [
-            step.tool.value
+            step.tool
             for step in original_steps
         ],
     )
@@ -276,7 +276,7 @@ Decide the NEXT tool.
     print(
         "FINAL PLAN:",
         [
-            step.tool.value
+            step.tool
             for step in plan.steps
         ],
     )
