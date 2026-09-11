@@ -125,8 +125,22 @@ async def create_plan(
     prompt: str,
     previous_results: dict | None = None,
 ) -> ExecutionPlan:
+
     print("🔥 CREATE PLAN CALLED")
     print("PROMPT:", prompt)
+
+    # ---------------------------------------
+    # Previous tool results
+    # ---------------------------------------
+
+    previous_results = previous_results or {}
+
+    executed_tools = set(
+        previous_results.keys()
+    )
+
+    print("EXECUTED TOOLS:", executed_tools)
+
     # ---------------------------------------
     # Discover MCP tools
     # ---------------------------------------
@@ -143,6 +157,7 @@ async def create_plan(
         }
         for tool in mcp_tools
     ]
+
     # ---------------------------------------
     # Ask planner
     # ---------------------------------------
@@ -157,26 +172,56 @@ async def create_plan(
             {
                 "role": "user",
                 "content": f"""
-                            User Request
+User Request:
 
-                            {prompt}
+{prompt}
 
-                            Previous Tool Results
+--------------------------------
 
-                            {json.dumps(
-                                previous_results or {},
-                                indent=2,
-                            )}
+ALREADY EXECUTED TOOLS:
 
-                            Available MCP Tools
+{json.dumps(
+    list(executed_tools),
+    indent=2,
+)}
 
-                            {json.dumps(
-                                mcp_tool_definitions,
-                                indent=2,
-                            )}
+--------------------------------
 
-                            Decide the NEXT tool.
-                            """,
+PREVIOUS TOOL RESULTS:
+
+{json.dumps(
+    previous_results,
+    indent=2,
+)}
+
+--------------------------------
+
+AVAILABLE MCP TOOLS:
+
+{json.dumps(
+    mcp_tool_definitions,
+    indent=2,
+)}
+
+--------------------------------
+
+PLANNING RULE:
+
+Select exactly ONE tool that has NOT already
+been executed.
+
+If all required information is already available,
+return:
+
+{{
+    "steps": []
+}}
+
+Do NOT select any tool listed under
+ALREADY EXECUTED TOOLS.
+
+Decide the NEXT tool.
+""",
             },
         ],
     )
@@ -196,8 +241,46 @@ async def create_plan(
         json.loads(text)
     )
 
-    print("\n===== PLANNER PLAN =====")
-    print(plan.model_dump_json(indent=2))
-    print("========================\n")
+    # ---------------------------------------
+    # SAFETY:
+    # Never execute the same tool twice
+    # ---------------------------------------
+
+    original_steps = plan.steps
+
+    plan.steps = [
+        step
+        for step in plan.steps
+        if step.tool.value not in executed_tools
+    ]
+
+    # ---------------------------------------
+    # Debug
+    # ---------------------------------------
+
+    print("\n===== PLANNER =====")
+
+    print(
+        "LLM PLAN:",
+        [
+            step.tool.value
+            for step in original_steps
+        ],
+    )
+
+    print(
+        "EXECUTED:",
+        list(executed_tools),
+    )
+
+    print(
+        "FINAL PLAN:",
+        [
+            step.tool.value
+            for step in plan.steps
+        ],
+    )
+
+    print("===================\n")
 
     return plan
