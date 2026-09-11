@@ -2,6 +2,8 @@
 
 import {
     FormEvent,
+    useEffect,
+    useRef,
     useState,
 } from "react";
 
@@ -15,30 +17,29 @@ interface Message {
 }
 
 export default function ChatPage() {
+    const [messages, setMessages] = useState<Message[]>([
+        {
+            role: "assistant",
+            content:
+                "Hi! I'm your Career Copilot. Ask me about your resume, job match, learning roadmap, assessments, or career goals.",
+        },
+    ]);
 
-    const [messages, setMessages] =
-        useState<Message[]>([
-            {
-                role: "assistant",
-                content:
-                    "Hi! I'm your Career Copilot. Ask me about your resume, job match, learning roadmap, assessments, or career goals.",
-            },
-        ]);
+    const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const [input, setInput] =
-        useState("");
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const [loading, setLoading] =
-        useState(false);
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({
+            behavior: loading ? "auto" : "smooth",
+        });
+    }, [messages, loading]);
 
-    async function sendMessage(
-        event: FormEvent
-    ) {
-
+    async function sendMessage(event: FormEvent) {
         event.preventDefault();
 
-        const message =
-            input.trim();
+        const message = input.trim();
 
         if (!message || loading) {
             return;
@@ -46,7 +47,6 @@ export default function ChatPage() {
 
         setInput("");
 
-        // Add user message
         setMessages(previous => [
             ...previous,
             {
@@ -62,16 +62,11 @@ export default function ChatPage() {
         setLoading(true);
 
         try {
-
             await chatWithAssistant(
                 message,
-                (chunk) => {
-
+                chunk => {
                     setMessages(previous => {
-
-                        const updated = [
-                            ...previous,
-                        ];
+                        const updated = [...previous];
 
                         const lastIndex =
                             updated.length - 1;
@@ -84,24 +79,17 @@ export default function ChatPage() {
                         };
 
                         return updated;
-
                     });
-
                 }
             );
-
         } catch (error) {
-
             console.error(
                 "Assistant error:",
                 error
             );
 
             setMessages(previous => {
-
-                const updated = [
-                    ...previous,
-                ];
+                const updated = [...previous];
 
                 const lastIndex =
                     updated.length - 1;
@@ -113,136 +101,67 @@ export default function ChatPage() {
                 };
 
                 return updated;
-
             });
-
         } finally {
-
             setLoading(false);
-
         }
     }
 
     return (
-
-        <div
-            className="
-                flex
-                h-full
-                min-h-0
-                flex-col
-                bg-[var(--background)]
-                text-[var(--foreground)]
-            "
-        >
+        <div className="flex h-full min-h-0 flex-col bg-[var(--background)] text-[var(--foreground)]">
 
             {/* Messages */}
 
-            <div
-                className="
-                    flex-1
-                    overflow-y-auto
-                    px-4
-                    py-8
-                    sm:px-8
-                "
-            >
+            <div className="flex-1 overflow-y-auto px-4 py-8 sm:px-8">
+                <div className="mx-auto flex max-w-4xl flex-col gap-5">
 
-                <div
-                    className="
-                        mx-auto
-                        flex
-                        max-w-4xl
-                        flex-col
-                        gap-5
-                    "
-                >
-
-                    {messages.map(
-                        (message, index) => (
-
+                    {messages.map((message, index) => (
+                        <div
+                            key={index}
+                            className={`flex ${
+                                message.role === "user"
+                                    ? "justify-end"
+                                    : "justify-start"
+                            }`}
+                        >
                             <div
-                                key={index}
-                                className={`flex ${
-                                    message.role === "user"
-                                        ? "justify-end"
-                                        : "justify-start"
-                                }`}
-                            >
-
-                                <div
-                                    className={`
-                                        max-w-[80%]
-                                        rounded-2xl
-                                        px-5
-                                        py-3
-                                        text-sm
-                                        leading-6
-
-                                        ${
-                                            message.role === "user"
-                                                ? `
-                                                    bg-blue-600
-                                                    text-white
-                                                `
-                                                : `
-                                                    border
-                                                    border-[var(--border)]
-                                                    bg-[var(--surface)]
-                                                    text-[var(--foreground)]
-                                                `
-                                        }
-                                    `}
-                                >
-
-                                    {message.content}
-
-                                </div>
-
-                            </div>
-
-                        )
-                    )}
-
-                    {loading && (
-
-                        <div className="flex justify-start">
-
-                            <div
-                                className="
+                                className={`
+                                    max-w-[80%]
                                     rounded-2xl
-                                    border
-                                    border-[var(--border)]
-                                    bg-[var(--surface)]
                                     px-5
                                     py-3
                                     text-sm
-                                    text-slate-500
-                                    dark:text-slate-400
-                                "
+                                    leading-6
+                                    ${
+                                        message.role === "user"
+                                            ? "bg-blue-600 text-white"
+                                            : "border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)]"
+                                    }
+                                `}
                             >
-
-                                <span className="flex items-center gap-2">
-
-                                    <span className="h-2 w-2 animate-pulse rounded-full bg-slate-400" />
-
-                                    Career Copilot is thinking...
-
-                                </span>
-
+                                {message.content}
                             </div>
-
                         </div>
+                    ))}
 
+                    {loading && (
+                        <div className="flex justify-start">
+                            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm text-slate-500">
+                                <span className="flex items-center gap-2">
+                                    <span className="h-2 w-2 animate-pulse rounded-full bg-slate-400" />
+                                    Career Copilot is thinking...
+                                </span>
+                            </div>
+                        </div>
                     )}
 
-                </div>
+                    {/* Scroll target */}
+                    <div ref={messagesEndRef} />
 
+                </div>
             </div>
 
-
             {/* Input */}
-
             <div
                 className="
                     border-t
